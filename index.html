@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eaf2ff">
+<title>HeartWays by Azure — שער פתיחה</title>
+<style>
+  :root{
+    --bg-from:#eaf2ff; --bg-to:#f9fbff; --card:rgba(255,255,255,.7);
+    --text:#0f2233; --accent:#2e6bff; --shadow:0 8px 20px rgba(46,107,255,.18);
+    --border:rgba(255,255,255,.6);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+    background: linear-gradient(180deg,var(--bg-from),var(--bg-to));
+    display:flex; align-items:center; justify-content:center; padding:20px; color:var(--text);
+  }
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .card{
+    background: var(--card);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border:1px solid var(--border);
+    border-radius: 20px; padding: 20px; max-width: 440px; width: 100%; box-shadow: var(--shadow);
+  }
+  h1{font-size:1.6rem;margin:0 0 10px;text-align:center}
+  p{margin:0 0 20px;text-align:center}
+  .question{margin-bottom:16px}
+  .options{margin-top:10px}
+  .btn{display:block;width:100%;padding:12px;border:none;border-radius:12px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer;text-align:center}
+  .btn + .btn{margin-top:8px}
+  .btn[aria-pressed="true"]{outline:2px solid #cfe0ff}
+  .cta{display:block;width:100%;padding:12px;background:linear-gradient(180deg,#e6f0ff,#d6e8ff);border:none;border-radius:16px;font-size:1rem;font-weight:700;color:var(--text);cursor:pointer;box-shadow:var(--shadow)}
+  .meta{margin-top:10px;text-align:center;color:#4b6473;font-size:.9rem}
+  .progress{height:8px;background:#e6edf7;border-radius:999px;overflow:hidden}
+  .bar{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+  .footer{margin-top:14px;text-align:center;color:#6a7d88;font-size:.8rem}
+  @media (prefers-reduced-motion: reduce){.bar{transition:none}}
+</style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <div class="sr-only" aria-live="polite" id="live"></div>
+    <h1 id="title">מה הצעד הבא שלך?</h1>
+    <p>נתיב קצר ואינטראקטיבי עשוי לחשוף משהו מפתיע עליך — בלי דרמה, רק גילוי.</p>
+
+    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+
+    <section class="question" id="q1" aria-labelledby="q1-lbl">
+      <strong id="q1-lbl">כשאת/ה ניצב/ת מול צומת: מה עוזר לך לבחור?</strong>
+      <div class="options">
+        <button type="button" class="btn" data-q="q1" data-val="data" aria-pressed="false">מידע ועובדות</button>
+        <button type="button" class="btn" data-q="q1" data-val="signal" aria-pressed="false">סימן קטן מהחיים</button>
+        <button type="button" class="btn" data-q="q1" data-val="test" aria-pressed="false">ניסוי קצר ולמידה תוך כדי</button>
+      </div>
+    </section>
+
+    <section class="question" id="q2" aria-labelledby="q2-lbl" hidden>
+      <strong id="q2-lbl">באיזה קצב נוח לך להתחיל משהו חדש?</strong>
+      <div class="options">
+        <button type="button" class="btn" data-q="q2" data-val="fast" aria-pressed="false">קופץ/ת פנימה ומגלה בדרך</button>
+        <button type="button" class="btn" data-q="q2" data-val="steady" aria-pressed="false">צעד יציב ולאט</button>
+        <button type="button" class="btn" data-q="q2" data-val="observe" aria-pressed="false">להסתכל רגע מסביב ואז לזוז</button>
+      </div>
+    </section>
+
+    <button type="button" class="cta" id="finish" hidden aria-describedby="meta">סיום והמשך</button>
+    <div id="meta" class="meta">ללא הרשמה · 60–90 שניות</div>
+    <div class="footer">© <span id="year"></span> Azure · HeartWays</div>
+  </main>
+
+<script>
+(function(){
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  const live = document.getElementById('live');
+  const bar = document.getElementById('bar');
+  const sections = ['q1','q2'];
+  const answers = { q1:null, q2:null };
+
+  function setProgress(){
+    const answered = Object.values(answers).filter(Boolean).length;
+    const pct = Math.round((answered/sections.length)*100);
+    if (bar) bar.style.width = pct + '%';
+  }
+
+  function show(id){
+    sections.forEach(s=>{
+      const el = document.getElementById(s);
+      if (!el) return;
+      el.hidden = s!==id;
+    });
+    if (live) live.textContent = id === 'q2' ? 'שאלה 2 הופעלה' : 'שאלה 1 הופעלה';
+  }
+
+  // Click handling with ARIA pressed state
+  document.addEventListener('click', (e)=>{
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    if (t.matches('.btn')){
+      const q = t.getAttribute('data-q');
+      const val = t.getAttribute('data-val');
+      if (!q || !val) return;
+      answers[q] = val;
+      // Toggle pressed states per group
+      document.querySelectorAll('.btn[data-q="'+q+'"]').forEach(b=>b.setAttribute('aria-pressed','false'));
+      t.setAttribute('aria-pressed','true');
+
+      if (q==='q1'){ show('q2'); }
+      setProgress();
+
+      // If last answered, reveal finish
+      const all = Object.values(answers).every(Boolean);
+      if (all){
+        document.getElementById('finish').hidden = false;
+        if (live) live.textContent = 'אפשר להמשיך';
+      }
+    }
+  });
+
+  // Keyboard accessibility: Enter key on focused .btn triggers click
+  document.addEventListener('keydown', (e)=>{
+    if (e.key==='Enter' && document.activeElement && document.activeElement.classList.contains('btn')){
+      e.preventDefault();
+      document.activeElement.click();
+    }
+  });
+
+  // Finish
+  document.getElementById('finish').addEventListener('click', ()=>{
+    const seed = Object.values(answers).join('-');
+    try { localStorage.setItem('hw_seed', seed); } catch(_){}
+    console.log('Answers:', answers, 'seed:', seed);
+    alert('תודה! המפתח הראשוני שלך מוכן.');
+  });
+
+  // Init
+  setProgress();
+  show('q1');
+})();
+</script>
+</body>
+</html>
