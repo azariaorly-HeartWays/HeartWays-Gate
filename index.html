@@ -46,4 +46,212 @@
       border:none;border-radius:16px;font-size:1rem;font-weight:700;color:var(--text);
       cursor:pointer;box-shadow:var(--shadow); margin-top:12px;
     }
-    .meta{margin-top:10px;text-align:center;color
+    .meta{margin-top:10px;text-align:center;color:#4b6473;font-size:.9rem}
+    .progress{height:8px;background:#e6edf7;border-radius:999px;overflow:hidden;margin-bottom:12px}
+    .bar{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+    .footer{margin-top:14px;text-align:center;color:#6a7d88;font-size:.8rem}
+
+    @media (prefers-reduced-motion: reduce){
+      .bar{transition:none}
+      *{animation:none !important; transition:none !important;}
+    }
+
+    /* ===== אפקט "שער קסם" לסיום ===== */
+    .gate-wrap { display:flex; flex-direction:column; gap:12px; }
+    .gate-container { position: relative; width: 100%; height: 300px; overflow: hidden; border-radius: 16px; }
+    .gate-left, .gate-right {
+      position: absolute; top: 0; width: 50%; height: 100%;
+      background: var(--gate-grad, linear-gradient(180deg,#0099cc,#006699));
+      transition: transform 2s ease; z-index: 2;
+    }
+    .gate-left { left: 0; transform-origin: left; }
+    .gate-right{ right:0; transform-origin: right; }
+
+    .gate-message {
+      position: absolute; z-index: 3; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); text-align: center; font-size: 1.4rem; color: white;
+      text-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .hebrew-letters {
+      position: absolute; font-size: 3rem; opacity: .15; width: 100%; height: 100%;
+      text-align: center; line-height: 300px; animation: floatLetters 6s infinite linear; color: white; z-index: 1;
+    }
+    @keyframes floatLetters { 0%{transform:translateY(0)} 50%{transform:translateY(-10px)} 100%{transform:translateY(0)} }
+    body.gate-open .gate-left { transform: translateX(-100%); }
+    body.gate-open .gate-right{ transform: translateX(100%); }
+
+    .gate-chip {
+      display:inline-flex; align-items:center; gap:.5rem; padding:.5rem .75rem; border-radius:999px;
+      background:#ffffffcc; color:#0f2233; font-size:.9rem; width:fit-content; margin-inline:auto;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <div class="sr-only" aria-live="polite" id="live"></div>
+
+    <h1 id="title">מה הצעד הבא שלך?</h1>
+    <p>נתיב קצר ואינטראקטיבי עשוי לחשוף משהו מפתיע עליך — בלי דרמה, רק גילוי.</p>
+
+    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+
+    <!-- נטען דינמית -->
+    <h1 class="question"></h1>
+    <div class="options"></div>
+    <button type="button" class="cta" disabled>סיום והמשך</button>
+
+    <div class="meta">ללא הרשמה · 60–90 שניות</div>
+    <div class="footer">© <span id="year"></span> Azure · HeartWays</div>
+  </main>
+
+  <script>
+    // ===== תוכן השאלון =====
+    const questions = [
+      { text: "מה הלב שלך מבקש עכשיו?",
+        options: ["חיבוק רגשי","השראה ויצירה","שקט ורוגע","חיבור לאנשים דומים לי"] },
+      { text: "איזה תחום בחיים היית רוצה לראות פורח יותר?",
+        options: ["זוגיות ואהבה","עיסוק שמכניס שמחה וגם פרנסה","בריאות גוף ונפש","תרומה והשפעה בעולם"] },
+      { text: "איך תרצה/י להרגיש בסוף המסע?",
+        options: ["מלא/ה באנרגיה","רגוע/ה ושליו/ה","מוארת ומחוברת","מלא/ת משמעות"] },
+      { text: "איזו חוויה מושכת אותך יותר עכשיו?",
+        options: ["משחק מאתגר שמתאים בדיוק למי שאני","מסע צבעים ואותיות קבליות","סיפור חסידי מעורר השראה","מפגש לבבות עם אנשים מכל העולם"] },
+      { text: "אם היה אפשר לפתוח עכשיו 'שער קסם' לחיים שלך – לאן היית רוצה שהוא יוביל?",
+        options: ["לגלות את המתנה האישית שלי","לחיות בהרמוניה עם הגוף והנפש","לחוות אהבה עמוקה","להגשים חלום ישן"] }
+    ];
+
+    // ===== מיפוי תשובה -> שער (עשר הספירות) עם צבע גראדיינט לכל שער =====
+    const GATES = {
+      "כתר": {grad:"linear-gradient(180deg,#dfe9f3,#a0c4ff)"},
+      "חכמה": {grad:"linear-gradient(180deg,#c3e7ff,#82c4ff)"},
+      "בינה": {grad:"linear-gradient(180deg,#e6d7ff,#b79bff)"},
+      "דעת": {grad:"linear-gradient(180deg,#e8f3ff,#9bd1ff)"},
+      "חסד": {grad:"linear-gradient(180deg,#e0fff6,#8be7cf)"},
+      "גבורה": {grad:"linear-gradient(180deg,#ffe0e0,#ff9b9b)"},
+      "תפארת": {grad:"linear-gradient(180deg,#fff2cc,#ffd166)"},
+      "נצח": {grad:"linear-gradient(180deg,#e4ffe0,#9ef08a)"},
+      "הוד": {grad:"linear-gradient(180deg,#e9e0ff,#bca8ff)"},
+      "יסוד": {grad:"linear-gradient(180deg,#e0f7ff,#76d6ff)"},
+      "מלכות": {grad:"linear-gradient(180deg,#fff0f6,#ffb3d1)"}
+    };
+
+    // מיפוי תשובות בסיסי (פשוט להרחבה בהמשך)
+    const ANSWER_TO_GATE = {
+      "חיבוק רגשי":"חסד",
+      "השראה ויצירה":"תפארת",
+      "שקט ורוגע":"יסוד",
+      "חיבור לאנשים דומים לי":"מלכות",
+
+      "זוגיות ואהבה":"מלכות",
+      "עיסוק שמכניס שמחה וגם פרנסה":"נצח",
+      "בריאות גוף ונפש":"יסוד",
+      "תרומה והשפעה בעולם":"הוד",
+
+      "מלא/ה באנרגיה":"נצח",
+      "רגוע/ה ושליו/ה":"יסוד",
+      "מוארת ומחוברת":"חכמה",
+      "מלא/ת משמעות":"בינה",
+
+      "משחק מאתגר שמתאים בדיוק למי שאני":"דעת",
+      "מסע צבעים ואותיות קבליות":"הוד",
+      "סיפור חסידי מעורר השראה":"חסד",
+      "מפגש לבבות עם אנשים מכל העולם":"מלכות",
+
+      "לגלות את המתנה האישית שלי":"תפארת",
+      "לחיות בהרמוניה עם הגוף והנפש":"יסוד",
+      "לחוות אהבה עמוקה":"מלכות",
+      "להגשים חלום ישן":"נצח"
+    };
+
+    let step = 0;
+    const chosen = []; // נשמור את הבחירות (טקסט התשובה)
+
+    function updateYear(){
+      const y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    }
+
+    function updateProgress(){
+      const bar = document.getElementById('bar');
+      if(!bar) return;
+      const pct = Math.min(100, Math.round((step / questions.length) * 100));
+      bar.style.width = pct + '%';
+    }
+
+    function renderQuestion() {
+      const card = document.querySelector('.card');
+      const qEl  = document.querySelector('.question');
+      const optEl= document.querySelector('.options');
+      const ctaEl= document.querySelector('.cta');
+
+      // סיום — חישוב שער והצגה
+      if (step >= questions.length) {
+        // ניקח את כל הבחירות, נמפה לשערים, ונבחר את המוביל
+        const counts = {};
+        chosen.forEach(ans=>{
+          const gate = ANSWER_TO_GATE[ans] || "כתר";
+          counts[gate] = (counts[gate]||0)+1;
+        });
+        // שער מוביל:
+        let topGate = "כתר", max = -1;
+        Object.entries(counts).forEach(([g,c])=>{ if(c>max){max=c; topGate=g;} });
+
+        const grad = (GATES[topGate]?.grad) || GATES["כתר"].grad;
+
+        card.innerHTML = `
+          <div class="gate-wrap">
+            <div class="gate-container" style="--gate-grad:${grad}">
+              <div class="gate-left"></div>
+              <div class="gate-right"></div>
+              <div class="hebrew-letters">אבגדהוזחטיכלמנסעפצקרשת</div>
+              <p class="gate-message">✨ השער שלך נפתח ✨<br>ברוכה הבאה אל שער <strong>${topGate}</strong></p>
+            </div>
+            <div class="gate-chip">הבחירות שלך כיוונו לכיוון: <strong>${topGate}</strong></div>
+            <button class="btn" onclick="location.reload()">התחלה חדשה</button>
+          </div>
+          <div class="footer">© <span id="year"></span> Azure · HeartWays</div>
+        `;
+        document.body.classList.add('gate-open');
+        updateYear();
+        return;
+      }
+
+      // שאלות ואפשרויות
+      qEl.textContent = questions[step].text;
+      optEl.innerHTML = "";
+
+      questions[step].options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "btn";
+        btn.textContent = opt;
+        btn.onclick = () => {
+          // סימון בחירה
+          optEl.querySelectorAll('.btn[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));
+          btn.setAttribute('aria-pressed','true');
+          // שמירה
+          chosen[step] = opt;
+          // הפעלת המשך
+          document.querySelector('.cta').removeAttribute('disabled');
+        };
+        optEl.appendChild(btn);
+      });
+
+      document.querySelector('.cta').setAttribute('disabled','');
+      updateProgress();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateYear();
+
+      const ctaEl = document.querySelector('.cta');
+      ctaEl.addEventListener('click', () => {
+        step++;
+        renderQuestion();
+      });
+
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>
