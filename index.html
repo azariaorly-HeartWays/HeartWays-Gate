@@ -32,13 +32,25 @@
     .blob.b3{ background:var(--blob3); width:32vmax; height:32vmax; left:35%; top:35%; animation-duration:22s }
     @keyframes floaty{ 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-20px) rotate(8deg)} }
 
-    /* קלף זכוכית נוזלית (ללא מסגרת מרובעת) */
-    .card-wrap{ position:relative; z-index:1 }
+    /* אותיות עברית — נפח גדול ורך בכל המסך */
+    .letters{
+      position:fixed; inset:0; display:grid; place-items:center; z-index:0; pointer-events:none;
+      font-size:18vmin; font-weight:900; letter-spacing:.7vmin; opacity:.06; color:#0f2233;
+      text-align:center; line-height:1.1;
+      text-shadow:
+        0 1px 0 rgba(255,255,255,.12),
+        0 8px 16px rgba(15,34,51,.28),
+        0 18px 30px rgba(15,34,51,.18);
+      filter: blur(.2px);
+      user-select:none;
+    }
+
+    /* קלף זכוכית נוזלית (ללא מסגרות מרובעות) */
+    .card-wrap{ position:relative; z-index:1; width:min(94vw,920px) }
     .card{
       position:relative; background:var(--glass-bg);
       -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
-      border-radius:22px; padding:24px; max-width:860px; width:min(94vw,860px);
-      box-shadow:var(--shadow); overflow:hidden;
+      border-radius:22px; padding:20px; box-shadow:var(--shadow); overflow:hidden;
     }
     .card::after{
       content:""; position:absolute; inset:-40% -60%; border-radius:40%;
@@ -47,40 +59,63 @@
     }
     @keyframes sheen{ to{ transform: rotate(360deg) } }
 
-    /* אותיות סאבלימינל */
-    .subliminal{
-      position:absolute; inset:0; pointer-events:none; user-select:none; display:grid; place-items:center;
-      opacity:.028; filter: blur(.45px); letter-spacing:.32rem; font-size:3.2rem; line-height:1.1; color:#0f2233;
+    /* כותרת עליונה קבועה */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;
+    }
+    .titles{ text-align:center; flex:1 }
+    h1{font-size:1.6rem;margin:0 0 2px;color:var(--text)}
+    .sub{margin:0;color:var(--text-soft);font-weight:700}
+
+    /* מידע דינמי (מונה צעדים + רמז אלבום) */
+    .status{
+      display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; justify-content:center;
+      color:#1c3f74; font-weight:800; margin:8px 0 2px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .65rem; border-radius:999px;
+      background:linear-gradient(180deg,#eef4ff,#e3ecff); box-shadow:0 6px 16px rgba(0,0,0,.08);
+    }
+    .album-btn{
+      display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .8rem; border:none; border-radius:999px;
+      background:linear-gradient(180deg,#f1f6ff,#e5eeff); color:#173c70; font-weight:900; cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,.1);
     }
 
-    h1{font-size:1.6rem;margin:0 0 10px;text-align:center;color:var(--text)}
-    p{margin:0 0 10px;text-align:center;color:var(--text-soft)}
-    .footer{margin-top:12px;text-align:center;color:#6a7d88;font-size:.8rem}
-
-    /* גריד 2×2 לעיגולים */
+    /* גריד יהלום (1–2–1) לעיגולים */
     .stage-grid{
-      display:grid; gap:14px; margin-top:12px;
-      grid-template-columns: repeat(2, minmax(180px,1fr));
+      --size: clamp(120px, 22vw, 190px);
+      display:grid; gap:16px; margin:10px auto 6px; width:fit-content;
+      grid-template-columns: repeat(3, var(--size));
+      grid-template-rows: repeat(3, var(--size));
+      grid-template-areas:
+        ". a ."
+        "b . c"
+        ". d .";
     }
-    @media (max-width:560px){ .stage-grid{ grid-template-columns: repeat(2, minmax(140px,1fr)); } }
+    .node{ width:var(--size); height:var(--size); }
+    .node.a{ grid-area:a } .node.b{ grid-area:b } .node.c{ grid-area:c } .node.d{ grid-area:d }
+
+    @media (max-width:560px){
+      .stage-grid{ --size: clamp(110px, 34vw, 160px); gap:12px }
+    }
 
     /* עיגולים — ללא מסגרות מרובעות */
     .stage-btn{
       position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
-      width:100%; max-width: clamp(150px, 28vw, 220px); aspect-ratio:1/1;
-      border-radius:999px; border:none;
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.78), rgba(255,255,255,.52) 70%),
-        var(--stage-grad, rgba(46,107,255,.06));
+      width:100%; height:100%;
+      border-radius:999px; border:none; cursor:pointer;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.78), rgba(255,255,255,.52) 70%),
+                  var(--stage-grad, rgba(46,107,255,.06));
       -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%);
       box-shadow: 0 8px 22px rgba(0,0,0,.10);
-      cursor:pointer; padding:14px; text-align:center;
-      transition: transform .12s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;
+      transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+      text-align:center; padding:12px;
     }
-    .stage-btn .title{ font-weight:900; font-size:1.08rem; color:#173c70 }
+    .stage-btn .title{ font-weight:900; font-size:1.05rem; color:#173c70 }
     .stage-btn .sub{ font-size:.9rem; color:#3b5f9a; margin-top:6px }
+    .stage-btn:hover{ filter: saturate(1.12) }
     .stage-btn:active{ transform: scale(.98) }
-    .stage-btn:hover{ filter: saturate(1.1) }
     .stage-btn.selected{
       transform: scale(1.04);
       box-shadow: 0 14px 32px rgba(0,0,0,.16), 0 0 0 6px rgba(207,230,255,.55);
@@ -96,16 +131,17 @@
     }
     @keyframes star-pop{ to{ transform: scale(1); opacity:1 } }
 
-    .hint{ margin-top:8px; text-align:center; color:#1e3f77; font-weight:800 }
-    .toast{
-      position: fixed; inset: 12px 50% auto auto; transform: translateX(50%);
-      background: rgba(255,255,255,.9); -webkit-backdrop-filter: blur(10px) saturate(140%); backdrop-filter: blur(10px) saturate(140%);
-      border-radius:999px; padding:.55rem 1rem; color:#163244; font-weight:800;
-      box-shadow:0 8px 22px rgba(0,0,0,.12); z-index: 9999;
+    .hint{ margin:6px 0 0; text-align:center; color:#1e3f77; font-weight:800 }
+
+    /* כפתור פעולה */
+    .cta{
+      display:block; width:100%; padding:12px 16px; margin-top:10px;
+      background:linear-gradient(180deg,#e6f0ff,#d6e8ff); border:none; border-radius:999px;
+      font-size:1rem; font-weight:900; color:var(--text); cursor:pointer; box-shadow:var(--shadow);
     }
 
     /* כוכב השראה — 8 קרניים, גדול ותנועה עדינה */
-    .star-card{ position:relative; display:grid; gap:14px }
+    .star-card{ position:relative; display:grid; gap:12px }
     .star{
       position:relative; width:180px; height:180px; margin:0 auto;
       background: var(--star-grad);
@@ -117,17 +153,15 @@
     @keyframes starIn{ from{transform:translateY(10px) scale(.94); opacity:0} to{transform:translateY(0) scale(1); opacity:1} }
     @keyframes float-rot{ 0%,100%{ transform: translateY(0) rotate(0deg) } 50%{ transform: translateY(-8px) rotate(3deg) } }
 
-    .suggest{ text-align:center; font-weight:900; font-size:1.3rem; color:#163a6b; letter-spacing:.02em }
-    .steps{ list-style:none; padding:0; margin:0; text-align:center; line-height:1.75; color:#234c86; font-size:1.05rem; font-weight:700 }
+    /* שורות זורמות בטיפוגרפיה משתנה */
+    .flow{ text-align:center; display:grid; gap:2px; }
+    .flow .l1{ font-weight:900; letter-spacing:.02em; font-size:1.2rem; color:#163a6b }
+    .flow .l2{ font-weight:800; letter-spacing:.015em; color:#204b82 }
+    .flow .l3{ font-weight:700; letter-spacing:.01em; color:#2b5c96 }
 
-    /* כפתורי פעולה — פיל */
-    .cta{
-      display:block;width:100%;padding:12px 16px;background:linear-gradient(180deg,#e6f0ff,#d6e8ff);
-      border:none;border-radius:999px;font-size:1rem;font-weight:900;color:var(--text);
-      cursor:pointer;box-shadow:var(--shadow); margin-top:12px;
-    }
+    .steps{ list-style:none; padding:0; margin:2px 0 0; text-align:center; line-height:1.7; color:#234c86; font-size:1.03rem; font-weight:700 }
 
-    /* סיום — דלת נפתחת + כוכב קטן */
+    /* סיום — דלת נפתחת + “בקרוב” */
     .door-wrap{ display:flex; flex-direction:column; gap:12px }
     .door{
       position:relative; width:100%; height:260px; overflow:hidden; border-radius:16px; background:var(--door-grad);
@@ -146,12 +180,10 @@
     }
 
     /* הודעת "בקרוב" + כפתור הורדה */
-    .launch{ margin-top:14px; text-align:center; color:#1d3f75; }
+    .launch{ margin-top:8px; text-align:center; color:#1d3f75; }
     .pill{
-      display:inline-flex; align-items:center; gap:.5rem;
-      padding:.65rem 1.1rem; border-radius:999px;
-      background:linear-gradient(180deg,#eef4ff,#dfeaff);
-      color:#163a6b; font-weight:900; box-shadow:var(--shadow);
+      display:inline-flex; align-items:center; gap:.5rem; padding:.65rem 1.1rem; border-radius:999px;
+      background:linear-gradient(180deg,#eef4ff,#dfeaff); color:#163a6b; font-weight:900; box-shadow:var(--shadow);
       text-decoration:none;
     }
     .pill .mini-star{
@@ -173,36 +205,74 @@
       width:120px; height:120px; margin:0 auto 10px; background:var(--star-grad);
       clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
                          50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
-      animation: float-rot 6s ease-in-out infinite;
-      filter: drop-shadow(0 8px 22px rgba(0,0,0,.16));
+      animation: float-rot 6s ease-in-out infinite; filter: drop-shadow(0 8px 22px rgba(0,0,0,.16));
     }
     .modal .title{ font-weight:900; font-size:1.25rem; margin:0 0 6px }
     .modal .text{ color:#2a4e8a; font-weight:700; margin:0 0 10px }
     .modal .close{ margin-top:8px }
+
+    /* אלבום קסום */
+    .album-grid{
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap:12px; margin-top:8px;
+    }
+    .album-card{
+      position:relative; padding:14px; border-radius:18px;
+      background:rgba(255,255,255,.75); -webkit-backdrop-filter: blur(10px) saturate(140%); backdrop-filter: blur(10px) saturate(140%);
+      box-shadow:0 10px 26px rgba(0,0,0,.12);
+    }
+    .album-card .tag{ font-size:.8rem; font-weight:900; color:#163a6b; opacity:.8 }
+    .album-card .title{ font-weight:900; color:#163a6b; margin:4px 0 }
+    .album-card .line{ color:#244f8a; font-weight:800 }
+    .album-card .star-mini{
+      position:absolute; width:28px; height:28px; top:10px; inset-inline-end:10px; background:var(--star-grad);
+      clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
+                         50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.18));
+    }
   </style>
 </head>
-
 <body>
   <!-- רקע -->
   <div class="blobs" aria-hidden="true">
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
   </div>
+  <div class="letters" aria-hidden="true">אבגדהוזחט יכ ל ם נ ס ע — זרימה · לב פתוח · יחד</div>
 
   <div class="card-wrap">
     <main class="card" role="main" aria-labelledby="title">
-      <div class="subliminal" aria-hidden="true">אבגדה · זרימה · לב פתוח · יחד</div>
-      <div class="sr-only" aria-live="polite" id="live"></div>
+      <!-- טופ-בר קבוע -->
+      <div class="topbar">
+        <button class="album-btn" id="openAlbum" title="פתחי אלבום" hidden>📔 אלבום</button>
+        <div class="titles">
+          <h1 id="title">איך בא לך להתחיל?</h1>
+          <p class="sub" id="subtitle">בחר/י שלב פתיחה — נקפיץ רעיון קטן שמרגיש נכון עכשיו.</p>
+        </div>
+        <div style="width:80px"></div>
+      </div>
 
-      <h1 id="title">איך בא לך להתחיל?</h1>
-      <p>בחר/י שלב פתיחה — נקפיץ רעיון קטן שמרגיש נכון עכשיו.</p>
+      <!-- סטטוס דינמי -->
+      <div class="status" id="status">
+        <span class="chip" id="stepsChip">צעדים: 0</span>
+        <span class="chip" id="albumHint">נשמר באלבום ✦</span>
+      </div>
 
+      <!-- מסך פתיחה -->
       <section id="stage-screen">
-        <div class="stage-grid" id="grid"></div>
+        <div class="stage-grid" id="grid">
+          <div class="node a"></div>
+          <div class="node b"></div>
+          <div class="node c"></div>
+          <div class="node d"></div>
+        </div>
         <div id="selection-hint" class="hint" aria-live="polite"></div>
         <button class="cta" id="go" disabled>מתגשם</button>
       </section>
 
+      <!-- כוכב השראה -->
       <section id="star-screen" hidden></section>
+
+      <!-- סיום + “בקרוב” -->
       <section id="end-screen" hidden></section>
 
       <div class="footer">© <span id="year"></span> HeartWays</div>
@@ -222,18 +292,22 @@
   <script>
     /* שלבים + גוונים */
     const STAGES = {
-      be:      { title:"להיות",   sub:"להאט רגע ולהתחבר לגוף",  accent:"#CCA24A",
+      be:      { key:'be', title:"להיות",   sub:"להאט רגע ולהתחבר לגוף",  accent:"#CCA24A",
                  gradFrom:"#FFF1C9", gradTo:"#FFD991",
-                 actions:["נשימת '4–4' במשך דקה","בדיקת כתפיים/לסת – לשחרר","מילה טובה לעצמי היום"] },
-      play:    { title:"לשחק",    sub:"קצת קלילות ותנועה",       accent:"#2FBF71",
+                 actions:["נשימת '4–4' במשך דקה","בדיקת כתפיים/לסת – לשחרר","מילה טובה לעצמי היום"],
+                 summary:(n)=>`בחרת להיות. רגע של נשימה ושחרור — צעד ${n} במסע שלך.` },
+      play:    { key:'play', title:"לשחק",  sub:"קצת קלילות ותנועה",       accent:"#2FBF71",
                  gradFrom:"#D9FFE7", gradTo:"#A6F4C5",
-                 actions:["3 תנועות גוף קצרות","חיוך קטן לעצמי","משחקון 60 שניות עם מה שיש"] },
-      create:  { title:"ליצור",   sub:"רעיון קטן + צעד ראשון",   accent:"#8B6CF6",
+                 actions:["3 תנועות גוף קצרות","חיוך קטן לעצמי","משחקון 60 שניות עם מה שיש"],
+                 summary:(n)=>`בחרת לשחק. טיפונת קלילות מזיזה הרים — צעד ${n} נשמר באלבום.` },
+      create:  { key:'create', title:"ליצור", sub:"רעיון קטן + צעד ראשון", accent:"#8B6CF6",
                  gradFrom:"#EBDFFF", gradTo:"#CAB7FF",
-                 actions:["לרשום רעיון אחד","להקדיש 2 דקות לצעד ראשון","לשתף חבר/ה לפידבק"] },
-      connect: { title:"להתחבר",  sub:"לב אל לב, הודעה קצרה",    accent:"#4BA3FF",
+                 actions:["לרשום רעיון אחד","להקדיש 2 דקות לצעד ראשון","לשתף חבר/ה לפידבק"],
+                 summary:(n)=>`בחרת ליצור. רעיון אחד ועוד צעד, ויש התחלה — צעד ${n}.` },
+      connect: { key:'connect', title:"להתחבר", sub:"לב אל לב, הודעה קצרה", accent:"#4BA3FF",
                  gradFrom:"#E7F2FF", gradTo:"#FFD6E6",
-                 actions:["לשלוח הודעת לב קצרה למישהו","להציע שיחת 5 דקות","לסגור זמן מפגש השבוע"] }
+                 actions:["לשלוח הודעת לב קצרה למישהו","להציע שיחת 5 דקות","לסגור זמן מפגש השבוע"],
+                 summary:(n)=>`בחרת להתחבר. הודעה קטנה — שינוי גדול. צעד ${n} נוסיף לאלבום.` }
     };
 
     /* seed לוריאציה עדינה */
@@ -251,11 +325,6 @@
 
     const prefersReduce = matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
     function vibrate(ms=12){ if(!prefersReduce && navigator.vibrate) navigator.vibrate(ms); }
-    function showToast(text, ms=1400){
-      const t = document.createElement('div'); t.className='toast'; t.textContent=text;
-      document.body.appendChild(t); setTimeout(()=>t.remove(), ms);
-    }
-    function setAccent(hex){ document.documentElement.style.setProperty('--accent', hex); }
     function hexToRGBA(hex, a){
       const m = hex.replace('#',''); const b = parseInt(m.length===3 ? m.split('').map(c=>c+c).join('') : m, 16);
       return `rgba(${(b>>16)&255},${(b>>8)&255},${b&255},${a})`;
@@ -270,68 +339,116 @@
       return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
     }
 
+    /* אלבום ב-localStorage */
+    const Album = {
+      key:'hw_album',
+      load(){ try{ return JSON.parse(localStorage.getItem(this.key)||'[]'); } catch{ return []; } },
+      save(list){ try{ localStorage.setItem(this.key, JSON.stringify(list)); } catch{} },
+      push(entry){ const list=this.load(); list.push(entry); this.save(list); return list; },
+      count(){ return this.load().length; }
+    };
+
+    /* UI helpers */
+    const $ = (s,root=document)=>root.querySelector(s);
+    const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
+    function setAccent(hex){ document.documentElement.style.setProperty('--accent', hex); }
+    function updateStatus(){
+      $('#stepsChip').textContent = `צעדים: ${Album.count()}`;
+      $('#albumHint').textContent = 'נשמר באלבום ✦';
+      // הצג כפתור אלבום כשיש לפחות רשומה אחת
+      if (Album.count()>0) $('#openAlbum').hidden = false;
+    }
+    function setSubtitle(msg){ $('#subtitle').textContent = msg; }
+
+    /* מסך פתיחה */
+    const order = ['be','play','create','connect']; // סדר בסיס ליהלום
     function renderStages(){
-      const grid = document.getElementById('grid');
-      const hint = document.getElementById('selection-hint');
-      grid.innerHTML = ""; hint.textContent = "";
-
-      const keys = Object.keys(STAGES);
-      const rot = SEED % keys.length;
-      const ordered = keys.slice(rot).concat(keys.slice(0,rot));
-
-      ordered.forEach((key)=>{
-        const val = STAGES[key];
-        const from = vary(val.gradFrom); const to = vary(val.gradTo);
+      const nodes = { a:$('.node.a'), b:$('.node.b'), c:$('.node.c'), d:$('.node.d') };
+      const map = { a:order[0], b:order[1], c:order[2], d:order[3] };
+      Object.entries(map).forEach(([spot,key])=>{
+        const st = STAGES[key];
+        const from = vary(st.gradFrom), to = vary(st.gradTo);
         const btn = document.createElement('button');
         btn.className = 'stage-btn';
-        btn.setAttribute('data-key', key);
         btn.style.setProperty('--stage-grad', `linear-gradient(180deg, ${from}, ${to})`);
-        btn.innerHTML = `<div class="title">${val.title}</div><div class="sub">${val.sub}</div>`;
-        btn.onclick = ()=>{
-          vibrate(14);
-          document.querySelectorAll('.stage-btn').forEach(b=>b.classList.remove('selected'));
-          btn.classList.add('selected');
-          state.selected = key;
-          setAccent(val.accent);
-          document.getElementById('go').disabled = false;
-
-          const stageMsg = {be:"בחירה רגועה. נתחיל מלנשום ולהרגיש את הגוף.",play:"איזו קלילות! רגע של משחק משחרר את הראש.",create:"נהדר! רעיון קטן ועוד צעד — ואת/ה בתנועה.",connect:"לב אל לב. הודעה קצרה למישהו — משנה את היום."}[key] || "";
-          hint.textContent = `בחרת: ${val.title} — ${stageMsg}`;
-          showToast(`נבחר: ${val.title}`);
-        };
-        grid.appendChild(btn);
+        btn.innerHTML = `<div class="title">${st.title}</div><div class="sub">${st.sub}</div>`;
+        btn.onclick = ()=>onSelectStage(key, btn);
+        nodes[spot].innerHTML = ''; nodes[spot].appendChild(btn);
       });
     }
 
-    /* מסכים */
-    const state = { selected:null };
+    let state = { selected:null };
+    function onSelectStage(key, el){
+      vibrate(14);
+      $$('.stage-btn').forEach(b=>b.classList.remove('selected'));
+      el.classList.add('selected');
+      state.selected = key;
+      setAccent(STAGES[key].accent);
+      $('#selection-hint').textContent = `בחרת: ${STAGES[key].title} — בואי נקפיץ רעיון קטן שמתאים עכשיו.`;
+      $('#go').disabled = false;
+      // במעבר למסך הבא — עדכן כותרת/סטטוס
+      setSubtitle('הדרך שלך נשמרת — אלבום קסום מתעדכן ✦');
+      $('#title').textContent = 'המשך המסע';
+      updateStatus();
+    }
 
+    /* כוכב השראה */
     function renderStar(){
       const key = state.selected; if(!key) return;
       const st = STAGES[key];
-      const starScreen = document.getElementById('star-screen');
-      starScreen.hidden = false;
-      document.getElementById('stage-screen').hidden = true;
+      const num = Album.count()+1;
+      const starScreen = $('#star-screen');
+      starScreen.hidden = false; $('#stage-screen').hidden = true;
+
+      // משפט מסכם (ייכנס לאלבום)
+      const summaryLine = st.summary(num);
 
       starScreen.innerHTML = `
         <div class="star-card">
           <div class="star" aria-hidden="true"></div>
-          <div class="suggest">הצעה קטנה ל${st.title} — עכשיו:</div>
+          <div class="flow">
+            <div class="l1">רעיון קטן ל${st.title} — עכשיו</div>
+            <div class="l2">${summaryLine}</div>
+            <div class="l3">בחרי פעולה אחת ובצעי אותה היום ✦</div>
+          </div>
           <ul class="steps">${st.actions.map(a=>`<li>• ${a}</li>`).join('')}</ul>
           <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr; margin-top:6px">
             <button class="cta" id="do">מתגשם</button>
             <button class="cta" id="back" style="background:linear-gradient(180deg,#f7f9ff,#edf3ff)">בחירה אחרת</button>
           </div>
-        </div>`;
-      document.getElementById('do').onclick = ()=>{ vibrate(); renderEnd(); };
-      document.getElementById('back').onclick = ()=>{ vibrate(); starScreen.hidden = true; document.getElementById('stage-screen').hidden = false; };
+        </div>
+      `;
+
+      $('#do').onclick = ()=>{
+        vibrate();
+        // שמירה לאלבום
+        const entry = {
+          t: Date.now(),
+          key: st.key,
+          title: st.title,
+          accent: st.accent,
+          line: summaryLine
+        };
+        const list = Album.push(entry);
+        updateStatus();
+        // אחרי 4 צעדים — הציעי לראות אלבום
+        if (list.length>=4) $('#openAlbum').hidden = false;
+        renderEnd();
+      };
+
+      $('#back').onclick = ()=>{
+        vibrate();
+        starScreen.hidden = true; $('#stage-screen').hidden = false;
+        setSubtitle('בחר/י שלב פתיחה — נקפיץ רעיון קטן שמרגיש נכון עכשיו.');
+        $('#title').textContent = 'איך בא לך להתחיל?';
+      };
     }
 
+    /* סיום */
     function renderEnd(){
       const key = state.selected; const st = STAGES[key];
-      const end = document.getElementById('end-screen');
-      end.hidden = false;
-      document.getElementById('star-screen').hidden = true;
+      const end = $('#end-screen');
+      end.hidden = false; $('#star-screen').hidden = true;
 
       end.innerHTML = `
         <div class="door-wrap">
@@ -340,51 +457,100 @@
             <div class="idea-star" aria-hidden="true"></div>
             <div class="end-msg">
               <div>
-                <div style="font-size:1.2rem;margin-bottom:.25rem">יצאת/ה לדרך ב-</div>
-                <div style="font-size:1.6rem;font-weight:800;margin-bottom:.35rem">${st.title}</div>
-                <div>בחר/י פעולה אחת ובצע/י אותה עוד היום ✨</div>
+                <div style="font-size:1.15rem;margin-bottom:.25rem">יפה! עוד צעד במסע שלך.</div>
+                <div style="font-size:1.5rem;font-weight:800;margin-bottom:.35rem">${st.title}</div>
+                <div>הצעד נשמר באלבום הקסום ✦</div>
               </div>
             </div>
           </div>
-          <button class="cta" id="again">ניסיון נוסף</button>
+
+          <div class="status">
+            <button class="album-btn" id="peekAlbum">📔 פתחי אלבום</button>
+            <button class="cta" id="again">בחירה נוספת</button>
+          </div>
+
           <div class="launch">
             <p style="margin:.6rem 0 .4rem; font-weight:900; font-size:1.15rem;">HeartWays — המשחק המלא מגיע בקרוב 🎮</p>
             <p style="margin:.2rem 0 .8rem; color:#2a4e8a; font-weight:700;">רוצה לקבל גישה מוקדמת כשזה קורה?</p>
-            <!-- זמני: פותח מודאל "בקרוב". אם יש URL אמיתי, החליפי href ומחקי data-temp="true" -->
             <a class="pill" id="downloadLink" href="#" data-temp="true">
               <span class="mini-star" aria-hidden="true"></span>
               הורדה מוקדמת / עדכון
             </a>
           </div>
-        </div>`;
-      document.body.classList.add('done');
-      document.getElementById('again').onclick = ()=>{ vibrate(); location.reload(); };
+        </div>
+      `;
 
-      // זמני → מודאל
-      const dl = document.getElementById('downloadLink');
+      document.body.classList.add('done');
+      $('#again').onclick = ()=>{ vibrate(); location.reload(); };
+      $('#peekAlbum').onclick = ()=>{ vibrate(); openAlbum(); };
+
+      // כפתור זמני → מודאל
+      const dl = $('#downloadLink');
       dl.addEventListener('click', (e)=>{
         if(dl.dataset.temp === "true"){ e.preventDefault(); openSoonModal(); }
       });
+
+      // עדכון כותרת/סטטוס
+      setSubtitle('הדרך שלך נשמרת — אלבום קסום מתעדכן ✦');
+      updateStatus();
     }
 
-    /* מודאל "בקרוב" */
+    /* אלבום: מציג מודאל עם כרטיסים */
+    function openAlbum(){
+      // בונים מודאל אלבום דינמי (שימוש במודאל "בקרוב" כמסגרת)
+      const ov = $('#overlay'); ov.style.display='flex'; ov.setAttribute('aria-hidden','false');
+      const box = ov.querySelector('.modal');
+      box.innerHTML = `
+        <div class="big-star" aria-hidden="true"></div>
+        <h2 class="title">האלבום הקסום שלך ✦</h2>
+        <p class="text">הדרך שנשמרה מתוך הבחירות שלך.</p>
+        <div class="album-grid" id="albumGrid"></div>
+        <button class="cta close" id="closeModal">סגור</button>
+      `;
+      const grid = $('#albumGrid', box);
+      const list = Album.load();
+      if (!list.length){
+        grid.innerHTML = `<div class="album-card"><div class="title">עדיין ריק</div><div class="line">כל בחירה נשמרת כאן.</div></div>`;
+      }else{
+        list.forEach((e,i)=>{
+          const card = document.createElement('div');
+          card.className='album-card';
+          card.style.setProperty('--star-grad', `linear-gradient(180deg, ${hexToRGBA(e.accent,.95)}, ${hexToRGBA(e.accent,.55)})`);
+          const d = new Date(e.t);
+          const date = d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'});
+          card.innerHTML = `
+            <div class="star-mini" aria-hidden="true"></div>
+            <div class="tag">${date} · צעד ${i+1}</div>
+            <div class="title">${e.title}</div>
+            <div class="line">${e.line}</div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+      $('#closeModal', box).onclick = closeSoonModal;
+      ov.addEventListener('click', (e)=>{ if(e.target===ov) closeSoonModal(); }, { once:true });
+      document.addEventListener('keydown', function escOnce(ev){ if(ev.key==='Escape'){ closeSoonModal(); document.removeEventListener('keydown', escOnce); } }, { once:true });
+    }
+
+    /* מודאל "בקרוב" (ממחזר גם לאלבום) */
     function openSoonModal(){
-      const ov = document.getElementById('overlay');
-      ov.style.display='flex'; ov.setAttribute('aria-hidden','false');
-      document.getElementById('closeModal').onclick = closeSoonModal;
-      ov.addEventListener('click', (e)=>{ if(e.target===ov) closeSoonModal(); });
-      document.addEventListener('keydown', function escOnce(ev){ if(ev.key==='Escape'){ closeSoonModal(); document.removeEventListener('keydown', escOnce); } });
+      const ov = $('#overlay'); ov.style.display='flex'; ov.setAttribute('aria-hidden','false');
+      $('#closeModal').onclick = closeSoonModal;
+      ov.addEventListener('click', (e)=>{ if(e.target===ov) closeSoonModal(); }, { once:true });
+      document.addEventListener('keydown', function escOnce(ev){ if(ev.key==='Escape'){ closeSoonModal(); document.removeEventListener('keydown', escOnce); } }, { once:true });
     }
     function closeSoonModal(){
-      const ov = document.getElementById('overlay');
+      const ov = $('#overlay');
       ov.style.display='none'; ov.setAttribute('aria-hidden','true');
     }
 
     /* Init */
     document.addEventListener('DOMContentLoaded', ()=>{
-      const y=document.getElementById('year'); if(y) y.textContent=String(new Date().getFullYear());
+      $('#year').textContent = String(new Date().getFullYear());
       renderStages();
-      document.getElementById('go').onclick = ()=>{ if(state.selected){ vibrate(); renderStar(); } };
+      updateStatus();
+      $('#go').onclick = ()=>{ if(state.selected){ vibrate(); renderStar(); } };
+      $('#openAlbum').onclick = ()=>{ vibrate(); openAlbum(); };
     });
   </script>
 </body>
