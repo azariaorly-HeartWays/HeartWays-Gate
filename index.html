@@ -145,9 +145,59 @@ button:active{transform:scale(.98)}
 })();
 </script>
   <script>
-document.querySelectorAll('.btn').forEach(btn=>{
- btn.onclick=()=>document.querySelector('.cta')?.removeAttribute('disabled')
-})
+const questions = [
+  {
+    text: "שאלה ראשונה – בחרי אפשרות:",
+    options: ["אפשרות 1", "אפשרות 2", "אפשרות 3"]
+  },
+  {
+    text: "שאלה שנייה – מה תעדיפי?",
+    options: ["תשובה א", "תשובה ב", "תשובה ג"]
+  },
+  {
+    text: "סיימנו – תודה!",
+    options: []
+  }
+];
+
+let step = 0;
+
+function renderQuestion() {
+  const qEl = document.querySelector('.question');
+  const optEl = document.querySelector('.options');
+  const ctaEl = document.querySelector('.cta');
+
+  qEl.textContent = questions[step].text;
+  optEl.innerHTML = "";
+
+  questions[step].options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = "btn";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      ctaEl.removeAttribute('disabled');
+    };
+    optEl.appendChild(btn);
+  });
+
+  if (questions[step].options.length === 0) {
+    ctaEl.style.display = 'none';
+  } else {
+    ctaEl.style.display = 'block';
+    ctaEl.setAttribute('disabled', '');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const ctaEl = document.querySelector('.cta');
+  ctaEl.addEventListener('click', () => {
+    step++;
+    renderQuestion();
+  });
+  renderQuestion();
+});
+</script>
+});
 </script>
 </body>
 </html>
