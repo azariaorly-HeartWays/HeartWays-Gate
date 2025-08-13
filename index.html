@@ -5,33 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#eaf2ff" />
   <title>HeartWays — פתיחה מותאמת</title>
-
   <style>
     :root{
-      /* בסיס לעריכה מהירה */
-      --bg-from:#eaf2ff; --bg-to:#f9fbff; --text:#0f2233; --accent:#2e6bff;
-      --glass-bg: rgba(255,255,255,.66); --glass-border: rgba(255,255,255,.55);
+      --bg-from:#eaf2ff; --bg-to:#f9fbff;
+      --text:#1b3f73; --text-soft:#325a91; --accent:#2e6bff;
+      --glass-bg: rgba(255,255,255,.66);
       --shadow: 0 10px 30px rgba(46,107,255,.18);
-
-      /* כוכבים/שער */
       --star-grad: linear-gradient(180deg,#fffaf0,#ffe7b8);
       --door-grad: linear-gradient(180deg,#8ec5ff,#4aa1ff);
-
-      /* blobs */
       --blob1:#7cc8ff; --blob2:#ffd4e3; --blob3:#d7c6ff;
     }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{box-sizing:border-box} html,body{height:100%}
     body{
-      margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
+      margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans";
       background: linear-gradient(180deg,var(--bg-from),var(--bg-to));
       display:flex; align-items:center; justify-content:center; padding:20px; color:var(--text);
       direction: rtl; text-align: right; overflow-x:hidden;
     }
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-    /* ===== blobs נוזליים ברקע ===== */
+    /* רקע נוזלי עדין */
     .blobs{ position: fixed; inset:-20vmax -10vmax auto auto; width:120vmax; height:120vmax; z-index:0; pointer-events:none; filter: blur(40px); }
     .blob{ position:absolute; border-radius:40%; opacity:.35; mix-blend-mode:multiply; transform: translateZ(0); animation: floaty 16s ease-in-out infinite; }
     .blob.b1{ background:var(--blob1); width:36vmax; height:36vmax; left:10%; top:0; animation-duration:18s }
@@ -39,15 +32,14 @@
     .blob.b3{ background:var(--blob3); width:32vmax; height:32vmax; left:35%; top:35%; animation-duration:22s }
     @keyframes floaty{ 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-20px) rotate(8deg)} }
 
-    /* ===== כרטיס Liquid-Glass ===== */
+    /* קלף זכוכית נוזלית (ללא מסגרת מרובעת) */
     .card-wrap{ position:relative; z-index:1 }
     .card{
       position:relative; background:var(--glass-bg);
       -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
-      border:1px solid var(--glass-border); border-radius:22px; padding:24px; max-width:860px; width:min(94vw,860px);
+      border-radius:22px; padding:24px; max-width:860px; width:min(94vw,860px);
       box-shadow:var(--shadow); overflow:hidden;
     }
-    .card::before{ content:""; position:absolute; inset:1px; border-radius:20px; border:1px solid rgba(255,255,255,.35); pointer-events:none; }
     .card::after{
       content:""; position:absolute; inset:-40% -60%; border-radius:40%;
       background: conic-gradient(from 0deg, transparent 0 70%, rgba(255,255,255,.18) 80%, transparent 88%);
@@ -61,68 +53,85 @@
       opacity:.028; filter: blur(.45px); letter-spacing:.32rem; font-size:3.2rem; line-height:1.1; color:#0f2233;
     }
 
-    h1{font-size:1.6rem;margin:0 0 10px;text-align:center}
-    p{margin:0 0 10px;text-align:center;color:#35566a}
+    h1{font-size:1.6rem;margin:0 0 10px;text-align:center;color:var(--text)}
+    p{margin:0 0 10px;text-align:center;color:var(--text-soft)}
     .footer{margin-top:12px;text-align:center;color:#6a7d88;font-size:.8rem}
 
-    /* גריד 2×2 */
+    /* גריד 2×2 לעיגולים */
     .stage-grid{
       display:grid; gap:14px; margin-top:12px;
       grid-template-columns: repeat(2, minmax(180px,1fr));
     }
     @media (max-width:560px){ .stage-grid{ grid-template-columns: repeat(2, minmax(140px,1fr)); } }
 
-    /* עיגול ליקוויד-גלאס – עם טינט/גרדיאנט צבע לפי שלב + וריאציה אישית */
+    /* עיגולים — ללא מסגרות מרובעות */
     .stage-btn{
       position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
       width:100%; max-width: clamp(150px, 28vw, 220px); aspect-ratio:1/1;
-      border-radius:999px; border:1px solid rgba(255,255,255,.55);
+      border-radius:999px; border:none;
       background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.75), rgba(255,255,255,.48) 70%),
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.78), rgba(255,255,255,.52) 70%),
         var(--stage-grad, rgba(46,107,255,.06));
       -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%);
       box-shadow: 0 8px 22px rgba(0,0,0,.10);
       cursor:pointer; padding:14px; text-align:center;
       transition: transform .12s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;
     }
-    .stage-btn .title{ font-weight:900; font-size:1.08rem; color:#183042 }
-    .stage-btn .sub{ font-size:.9rem; color:#456174; margin-top:6px }
+    .stage-btn .title{ font-weight:900; font-size:1.08rem; color:#173c70 }
+    .stage-btn .sub{ font-size:.9rem; color:#3b5f9a; margin-top:6px }
     .stage-btn:active{ transform: scale(.98) }
     .stage-btn:hover{ filter: saturate(1.1) }
-    .stage-btn.selected{ transform: scale(1.04); box-shadow: 0 12px 30px rgba(0,0,0,.14), 0 0 0 3px #cfe6ff inset }
+    .stage-btn.selected{
+      transform: scale(1.04);
+      box-shadow: 0 14px 32px rgba(0,0,0,.16), 0 0 0 6px rgba(207,230,255,.55);
+    }
+    /* כוכב 8 קרניים קטן לסימון בחירה */
     .stage-btn.selected::after{
-      content:"✦"; position:absolute; top:8px; inset-inline-end:10px; font-weight:900; color:#174266;
-      transform: scale(0.7); opacity:0; animation: star-pop .25s ease forwards;
+      content:""; position:absolute; top:6px; inset-inline-end:8px; width:18px; height:18px;
+      background: radial-gradient(circle, #fff 0 50%, transparent 60%), var(--star-grad);
+      clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
+                         50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.18));
+      transform: scale(.7); opacity:0; animation: star-pop .25s ease forwards;
     }
     @keyframes star-pop{ to{ transform: scale(1); opacity:1 } }
 
-    /* טקסט משוב מתחת לגריד + טוסט */
-    .hint{ margin-top:8px; text-align:center; color:#204055; font-weight:700 }
+    .hint{ margin-top:8px; text-align:center; color:#1e3f77; font-weight:800 }
     .toast{
       position: fixed; inset: 12px 50% auto auto; transform: translateX(50%);
-      background: rgba(255,255,255,.85); -webkit-backdrop-filter: blur(10px) saturate(140%); backdrop-filter: blur(10px) saturate(140%);
-      border:1px solid rgba(255,255,255,.5); border-radius:999px; padding:.5rem .9rem; color:#163244; font-weight:700;
+      background: rgba(255,255,255,.9); -webkit-backdrop-filter: blur(10px) saturate(140%); backdrop-filter: blur(10px) saturate(140%);
+      border-radius:999px; padding:.55rem 1rem; color:#163244; font-weight:800;
       box-shadow:0 8px 22px rgba(0,0,0,.12); z-index: 9999;
     }
 
-    /* כוכב השראה */
-    .star-card{ position:relative; display:grid; gap:12px }
+    /* כוכב השראה — 8 קרניים, גדול ותנועה עדינה */
+    .star-card{ position:relative; display:grid; gap:14px }
     .star{
-      position:relative; width:140px; height:140px; margin:0 auto;
+      position:relative; width:180px; height:180px; margin:0 auto;
       background: var(--star-grad);
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      box-shadow:0 10px 26px rgba(0,0,0,.14);
-      animation: starIn .4s ease both;
+      clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
+                         50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
+      box-shadow:0 14px 30px rgba(0,0,0,.16);
+      animation: starIn .45s ease both, float-rot 6s ease-in-out infinite;
     }
-    @keyframes starIn{ from{transform:translateY(6px) scale(.96); opacity:0} to{transform:translateY(0) scale(1); opacity:1} }
-    .suggest{ text-align:center; font-weight:800; font-size:1.2rem; color:#1b3344 }
-    .steps{ list-style:none; padding:0; margin:0; text-align: center; line-height:1.7; color:#2b4658 }
+    @keyframes starIn{ from{transform:translateY(10px) scale(.94); opacity:0} to{transform:translateY(0) scale(1); opacity:1} }
+    @keyframes float-rot{ 0%,100%{ transform: translateY(0) rotate(0deg) } 50%{ transform: translateY(-8px) rotate(3deg) } }
+
+    .suggest{ text-align:center; font-weight:900; font-size:1.3rem; color:#163a6b; letter-spacing:.02em }
+    .steps{ list-style:none; padding:0; margin:0; text-align:center; line-height:1.75; color:#234c86; font-size:1.05rem; font-weight:700 }
+
+    /* כפתורי פעולה — פיל */
+    .cta{
+      display:block;width:100%;padding:12px 16px;background:linear-gradient(180deg,#e6f0ff,#d6e8ff);
+      border:none;border-radius:999px;font-size:1rem;font-weight:900;color:var(--text);
+      cursor:pointer;box-shadow:var(--shadow); margin-top:12px;
+    }
 
     /* סיום — דלת נפתחת + כוכב קטן */
     .door-wrap{ display:flex; flex-direction:column; gap:12px }
     .door{
       position:relative; width:100%; height:260px; overflow:hidden; border-radius:16px; background:var(--door-grad);
-      -webkit-backdrop-filter: blur(6px) saturate(140%); backdrop-filter: blur(6px) saturate(140%); border:1px solid rgba(255,255,255,.45);
+      -webkit-backdrop-filter: blur(6px) saturate(140%); backdrop-filter: blur(6px) saturate(140%);
     }
     .panel{ position:absolute; top:0; width:50%; height:100%; background:inherit; transition: transform 1.1s ease }
     .panel.left{ left:0; transform-origin:left } .panel.right{ right:0; transform-origin:right }
@@ -131,19 +140,50 @@
     .idea-star{
       position:absolute; width:100px; height:100px; left:10%; top:12%;
       background: var(--star-grad);
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
+                         50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
       opacity:.9; filter: drop-shadow(0 8px 18px rgba(0,0,0,.18)); animation: floaty 6s ease-in-out infinite;
     }
 
-    @media (prefers-reduced-motion: reduce){
-      *{animation:none !important; transition:none !important;}
-      .blobs{ display:none; }
+    /* הודעת "בקרוב" + כפתור הורדה */
+    .launch{ margin-top:14px; text-align:center; color:#1d3f75; }
+    .pill{
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.65rem 1.1rem; border-radius:999px;
+      background:linear-gradient(180deg,#eef4ff,#dfeaff);
+      color:#163a6b; font-weight:900; box-shadow:var(--shadow);
+      text-decoration:none;
     }
+    .pill .mini-star{
+      width:18px; height:18px; background:var(--star-grad); display:inline-block;
+      clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
+                         50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.12));
+    }
+
+    /* מודאל "בקרוב" */
+    .overlay{ position:fixed; inset:0; background:rgba(15,34,51,.28); display:none; align-items:center; justify-content:center; z-index:9999; }
+    .modal{
+      position:relative; padding:22px; border-radius:22px; background:rgba(255,255,255,.9);
+      -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%);
+      box-shadow:var(--shadow); width:min(92vw,520px);
+      text-align:center; color:#163a6b;
+    }
+    .modal .big-star{
+      width:120px; height:120px; margin:0 auto 10px; background:var(--star-grad);
+      clip-path: polygon(50% 0%, 65% 20%, 80% 20%, 65% 35%, 100% 50%, 65% 65%, 80% 80%, 65% 80%,
+                         50% 100%, 35% 80%, 20% 80%, 35% 65%, 0% 50%, 35% 35%, 20% 20%, 35% 20%);
+      animation: float-rot 6s ease-in-out infinite;
+      filter: drop-shadow(0 8px 22px rgba(0,0,0,.16));
+    }
+    .modal .title{ font-weight:900; font-size:1.25rem; margin:0 0 6px }
+    .modal .text{ color:#2a4e8a; font-weight:700; margin:0 0 10px }
+    .modal .close{ margin-top:8px }
   </style>
 </head>
 
 <body>
-  <!-- רקע נוזלי -->
+  <!-- רקע -->
   <div class="blobs" aria-hidden="true">
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
   </div>
@@ -153,8 +193,8 @@
       <div class="subliminal" aria-hidden="true">אבגדה · זרימה · לב פתוח · יחד</div>
       <div class="sr-only" aria-live="polite" id="live"></div>
 
-      <h1 id="title">מה מתאים לך להתחיל איתו?</h1>
-      <p>בחר/י שלב פתיחה — נקפיץ רעיון פרקטי שמרגיש נכון עכשיו.</p>
+      <h1 id="title">איך בא לך להתחיל?</h1>
+      <p>בחר/י שלב פתיחה — נקפיץ רעיון קטן שמרגיש נכון עכשיו.</p>
 
       <section id="stage-screen">
         <div class="stage-grid" id="grid"></div>
@@ -169,10 +209,18 @@
     </main>
   </div>
 
+  <!-- מודאל "בקרוב" לכפתור הורדה זמני -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="soon-title" aria-hidden="true">
+    <div class="modal">
+      <div class="big-star" aria-hidden="true"></div>
+      <h2 id="soon-title" class="title">HeartWays — בקרוב מאוד ✨</h2>
+      <p class="text">המשחק המלא בדרך. נשחרר הורדה כשנפתח את השער.</p>
+      <button class="cta close" id="closeModal">סגור</button>
+    </div>
+  </div>
+
   <script>
-    /* ===== מיפוי שלבים + גוונים בהשראת מפה קבלית עדינה =====
-       Be ↔ תפארת (ענבר/זהוב-רך), Play ↔ נצח/הוד (ירקרק-טורקיז),
-       Create ↔ חכמה/בינה (סגול-לילך), Connect ↔ חסד (תכלת/ורוד-שחר) */
+    /* שלבים + גוונים */
     const STAGES = {
       be:      { title:"להיות",   sub:"להאט רגע ולהתחבר לגוף",  accent:"#CCA24A",
                  gradFrom:"#FFF1C9", gradTo:"#FFD991",
@@ -188,7 +236,7 @@
                  actions:["לשלוח הודעת לב קצרה למישהו","להציע שיחת 5 דקות","לסגור זמן מפגש השבוע"] }
     };
 
-    /* ===== פרסונליזציה קלה: seed מהדפדפן/זמן, משפיע בעדינות על גוון וסדר ===== */
+    /* seed לוריאציה עדינה */
     function getSeed(){
       try{
         let s = localStorage.getItem('hw_seed');
@@ -201,24 +249,6 @@
     }
     const SEED = getSeed();
 
-    function hexToRGBA(hex, a){
-      const m = hex.replace('#','');
-      const b = parseInt(m.length===3 ? m.split('').map(c=>c+c).join('') : m, 16);
-      return `rgba(${(b>>16)&255},${(b>>8)&255},${b&255},${a})`;
-    }
-
-    function vary(hex, amt=0.04){
-      // וריאציה קלה על בסיס seed
-      const m = hex.replace('#','');
-      let r=(parseInt(m.substr(0,2),16)), g=(parseInt(m.substr(2,2),16)), b=(parseInt(m.substr(4,2),16));
-      const delta = (((SEED%7)-3)*amt);
-      r = Math.max(0, Math.min(255, Math.round(r*(1+delta))));
-      g = Math.max(0, Math.min(255, Math.round(g*(1+delta))));
-      b = Math.max(0, Math.min(255, Math.round(b*(1+delta))));
-      return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-    }
-
-    /* טוסט קצר + רטט */
     const prefersReduce = matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
     function vibrate(ms=12){ if(!prefersReduce && navigator.vibrate) navigator.vibrate(ms); }
     function showToast(text, ms=1400){
@@ -226,13 +256,25 @@
       document.body.appendChild(t); setTimeout(()=>t.remove(), ms);
     }
     function setAccent(hex){ document.documentElement.style.setProperty('--accent', hex); }
+    function hexToRGBA(hex, a){
+      const m = hex.replace('#',''); const b = parseInt(m.length===3 ? m.split('').map(c=>c+c).join('') : m, 16);
+      return `rgba(${(b>>16)&255},${(b>>8)&255},${b&255},${a})`;
+    }
+    function vary(hex, amt=0.04){
+      const m = hex.replace('#','');
+      let r=parseInt(m.substr(0,2),16), g=parseInt(m.substr(2,2),16), b=parseInt(m.substr(4,2),16);
+      const delta = (((SEED%7)-3)*amt);
+      r = Math.max(0, Math.min(255, Math.round(r*(1+delta))));
+      g = Math.max(0, Math.min(255, Math.round(g*(1+delta))));
+      b = Math.max(0, Math.min(255, Math.round(b*(1+delta))));
+      return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    }
 
     function renderStages(){
       const grid = document.getElementById('grid');
       const hint = document.getElementById('selection-hint');
       grid.innerHTML = ""; hint.textContent = "";
 
-      // סדר מותאם־Seed (סיבוב מערך קל)
       const keys = Object.keys(STAGES);
       const rot = SEED % keys.length;
       const ordered = keys.slice(rot).concat(keys.slice(0,rot));
@@ -243,7 +285,6 @@
         const btn = document.createElement('button');
         btn.className = 'stage-btn';
         btn.setAttribute('data-key', key);
-        // גרדיאנט מותאם לשלב + פרסונליזציה עדינה
         btn.style.setProperty('--stage-grad', `linear-gradient(180deg, ${from}, ${to})`);
         btn.innerHTML = `<div class="title">${val.title}</div><div class="sub">${val.sub}</div>`;
         btn.onclick = ()=>{
@@ -254,13 +295,7 @@
           setAccent(val.accent);
           document.getElementById('go').disabled = false;
 
-          const stageMsg = {
-            be: "בחירה רגועה. נתחיל מלנשום ולהרגיש את הגוף.",
-            play: "איזו קלילות! רגע של משחק משחרר את הראש.",
-            create: "נהדר! רעיון קטן ועוד צעד — ואת/ה בתנועה.",
-            connect: "לב אל לב. הודעה קצרה למישהו — משנה את היום."
-          }[key] || "";
-
+          const stageMsg = {be:"בחירה רגועה. נתחיל מלנשום ולהרגיש את הגוף.",play:"איזו קלילות! רגע של משחק משחרר את הראש.",create:"נהדר! רעיון קטן ועוד צעד — ואת/ה בתנועה.",connect:"לב אל לב. הודעה קצרה למישהו — משנה את היום."}[key] || "";
           hint.textContent = `בחרת: ${val.title} — ${stageMsg}`;
           showToast(`נבחר: ${val.title}`);
         };
@@ -268,7 +303,7 @@
       });
     }
 
-    /* מסכי השראה/סיום */
+    /* מסכים */
     const state = { selected:null };
 
     function renderStar(){
@@ -287,15 +322,9 @@
             <button class="cta" id="do">מתגשם</button>
             <button class="cta" id="back" style="background:linear-gradient(180deg,#f7f9ff,#edf3ff)">בחירה אחרת</button>
           </div>
-        </div>
-      `;
-
+        </div>`;
       document.getElementById('do').onclick = ()=>{ vibrate(); renderEnd(); };
-      document.getElementById('back').onclick = ()=>{
-        vibrate();
-        starScreen.hidden = true;
-        document.getElementById('stage-screen').hidden = false;
-      };
+      document.getElementById('back').onclick = ()=>{ vibrate(); starScreen.hidden = true; document.getElementById('stage-screen').hidden = false; };
     }
 
     function renderEnd(){
@@ -318,14 +347,40 @@
             </div>
           </div>
           <button class="cta" id="again">ניסיון נוסף</button>
-        </div>
-      `;
-
+          <div class="launch">
+            <p style="margin:.6rem 0 .4rem; font-weight:900; font-size:1.15rem;">HeartWays — המשחק המלא מגיע בקרוב 🎮</p>
+            <p style="margin:.2rem 0 .8rem; color:#2a4e8a; font-weight:700;">רוצה לקבל גישה מוקדמת כשזה קורה?</p>
+            <!-- זמני: פותח מודאל "בקרוב". אם יש URL אמיתי, החליפי href ומחקי data-temp="true" -->
+            <a class="pill" id="downloadLink" href="#" data-temp="true">
+              <span class="mini-star" aria-hidden="true"></span>
+              הורדה מוקדמת / עדכון
+            </a>
+          </div>
+        </div>`;
       document.body.classList.add('done');
       document.getElementById('again').onclick = ()=>{ vibrate(); location.reload(); };
+
+      // זמני → מודאל
+      const dl = document.getElementById('downloadLink');
+      dl.addEventListener('click', (e)=>{
+        if(dl.dataset.temp === "true"){ e.preventDefault(); openSoonModal(); }
+      });
     }
 
-    /* אתחול */
+    /* מודאל "בקרוב" */
+    function openSoonModal(){
+      const ov = document.getElementById('overlay');
+      ov.style.display='flex'; ov.setAttribute('aria-hidden','false');
+      document.getElementById('closeModal').onclick = closeSoonModal;
+      ov.addEventListener('click', (e)=>{ if(e.target===ov) closeSoonModal(); });
+      document.addEventListener('keydown', function escOnce(ev){ if(ev.key==='Escape'){ closeSoonModal(); document.removeEventListener('keydown', escOnce); } });
+    }
+    function closeSoonModal(){
+      const ov = document.getElementById('overlay');
+      ov.style.display='none'; ov.setAttribute('aria-hidden','true');
+    }
+
+    /* Init */
     document.addEventListener('DOMContentLoaded', ()=>{
       const y=document.getElementById('year'); if(y) y.textContent=String(new Date().getFullYear());
       renderStages();
