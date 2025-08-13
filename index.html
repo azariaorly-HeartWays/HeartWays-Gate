@@ -38,6 +38,8 @@
   .bar{height:100%;width:0;background:var(--accent);transition:width .3s ease}
   .footer{margin-top:14px;text-align:center;color:#6a7d88;font-size:.8rem}
   @media (prefers-reduced-motion: reduce){.bar{transition:none}}
+  body{direction:rtl;text-align:right}
+button:active{transform:scale(.98)}
 </style>
 </head>
 <body>
@@ -141,6 +143,11 @@
   setProgress();
   show('q1');
 })();
+</script>
+  <script>
+document.querySelectorAll('.btn').forEach(btn=>{
+ btn.onclick=()=>document.querySelector('.cta')?.removeAttribute('disabled')
+})
 </script>
 </body>
 </html>
