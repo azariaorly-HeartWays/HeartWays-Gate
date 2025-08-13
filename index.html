@@ -4,18 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#eaf2ff" />
-  <title>HeartWays — פתיחה 4 שלבים</title>
+  <title>HeartWays — פתיחה מותאמת</title>
 
   <style>
     :root{
-      /* בסיס קל לכיוונון עתידי */
+      /* בסיס לעריכה מהירה */
       --bg-from:#eaf2ff; --bg-to:#f9fbff; --text:#0f2233; --accent:#2e6bff;
       --glass-bg: rgba(255,255,255,.66); --glass-border: rgba(255,255,255,.55);
       --shadow: 0 10px 30px rgba(46,107,255,.18);
 
-      /* כוכב/דלת/בועה */
+      /* כוכבים/שער */
       --star-grad: linear-gradient(180deg,#fffaf0,#ffe7b8);
-      --star-press:#ffe29a;
       --door-grad: linear-gradient(180deg,#8ec5ff,#4aa1ff);
 
       /* blobs */
@@ -66,41 +65,48 @@
     p{margin:0 0 10px;text-align:center;color:#35566a}
     .footer{margin-top:12px;text-align:center;color:#6a7d88;font-size:.8rem}
 
-    /* גריד 2×2 לבחירה מהירה */
+    /* גריד 2×2 */
     .stage-grid{
       display:grid; gap:14px; margin-top:12px;
       grid-template-columns: repeat(2, minmax(180px,1fr));
     }
     @media (max-width:560px){ .stage-grid{ grid-template-columns: repeat(2, minmax(140px,1fr)); } }
 
-    /* עיגול ליקוויד-גלאס */
+    /* עיגול ליקוויד-גלאס – עם טינט/גרדיאנט צבע לפי שלב + וריאציה אישית */
     .stage-btn{
       position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
-      aspect-ratio:1/1; border-radius:999px; border:1px solid rgba(255,255,255,.55);
-      background: rgba(255,255,255,.58);
+      width:100%; max-width: clamp(150px, 28vw, 220px); aspect-ratio:1/1;
+      border-radius:999px; border:1px solid rgba(255,255,255,.55);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.75), rgba(255,255,255,.48) 70%),
+        var(--stage-grad, rgba(46,107,255,.06));
       -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%);
-      box-shadow: 0 8px 24px rgba(0,0,0,.08); cursor:pointer; padding:14px; text-align:center;
-      transition: transform .12s ease, box-shadow .2s ease;
+      box-shadow: 0 8px 22px rgba(0,0,0,.10);
+      cursor:pointer; padding:14px; text-align:center;
+      transition: transform .12s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;
     }
-    .stage-btn .title{ font-weight:900; font-size:1.1rem; color:#183042 }
+    .stage-btn .title{ font-weight:900; font-size:1.08rem; color:#183042 }
     .stage-btn .sub{ font-size:.9rem; color:#456174; margin-top:6px }
     .stage-btn:active{ transform: scale(.98) }
+    .stage-btn:hover{ filter: saturate(1.1) }
     .stage-btn.selected{ transform: scale(1.04); box-shadow: 0 12px 30px rgba(0,0,0,.14), 0 0 0 3px #cfe6ff inset }
     .stage-btn.selected::after{
-      content:"✓"; position:absolute; top:8px; inset-inline-end:10px; font-weight:900; color:#174266;
+      content:"✦"; position:absolute; top:8px; inset-inline-end:10px; font-weight:900; color:#174266;
+      transform: scale(0.7); opacity:0; animation: star-pop .25s ease forwards;
     }
+    @keyframes star-pop{ to{ transform: scale(1); opacity:1 } }
 
-    /* כפתור פעולה */
-    .cta{
-      display:block;width:100%;padding:12px;background:linear-gradient(180deg,#e6f0ff,#d6e8ff);
-      border:none;border-radius:16px;font-size:1rem;font-weight:900;color:var(--text);
-      cursor:pointer;box-shadow:var(--shadow); margin-top:12px;
+    /* טקסט משוב מתחת לגריד + טוסט */
+    .hint{ margin-top:8px; text-align:center; color:#204055; font-weight:700 }
+    .toast{
+      position: fixed; inset: 12px 50% auto auto; transform: translateX(50%);
+      background: rgba(255,255,255,.85); -webkit-backdrop-filter: blur(10px) saturate(140%); backdrop-filter: blur(10px) saturate(140%);
+      border:1px solid rgba(255,255,255,.5); border-radius:999px; padding:.5rem .9rem; color:#163244; font-weight:700;
+      box-shadow:0 8px 22px rgba(0,0,0,.12); z-index: 9999;
     }
 
     /* כוכב השראה */
-    .star-card{
-      position:relative; display:grid; gap:12px;
-    }
+    .star-card{ position:relative; display:grid; gap:12px }
     .star{
       position:relative; width:140px; height:140px; margin:0 auto;
       background: var(--star-grad);
@@ -112,7 +118,7 @@
     .suggest{ text-align:center; font-weight:800; font-size:1.2rem; color:#1b3344 }
     .steps{ list-style:none; padding:0; margin:0; text-align: center; line-height:1.7; color:#2b4658 }
 
-    /* סיום — דלת נפתחת + כוכב רעיון קטן */
+    /* סיום — דלת נפתחת + כוכב קטן */
     .door-wrap{ display:flex; flex-direction:column; gap:12px }
     .door{
       position:relative; width:100%; height:260px; overflow:hidden; border-radius:16px; background:var(--door-grad);
@@ -148,12 +154,11 @@
       <div class="sr-only" aria-live="polite" id="live"></div>
 
       <h1 id="title">מה מתאים לך להתחיל איתו?</h1>
-      <p>בחרי/בחרי שלב פתיחה — נקפיץ רעיון פרקטי שמרגיש נכון עכשיו.</p>
+      <p>בחר/י שלב פתיחה — נקפיץ רעיון פרקטי שמרגיש נכון עכשיו.</p>
 
       <section id="stage-screen">
-        <div class="stage-grid" id="grid">
-          <!-- העיגולים נוצרים דינמית -->
-        </div>
+        <div class="stage-grid" id="grid"></div>
+        <div id="selection-hint" class="hint" aria-live="polite"></div>
         <button class="cta" id="go" disabled>מתגשם</button>
       </section>
 
@@ -165,30 +170,81 @@
   </div>
 
   <script>
-    // שלבים (Be / Play / Create / Connect) — טקסט, תיאור קצר, צבע הדגשה וצעדים פרקטיים
+    /* ===== מיפוי שלבים + גוונים בהשראת מפה קבלית עדינה =====
+       Be ↔ תפארת (ענבר/זהוב-רך), Play ↔ נצח/הוד (ירקרק-טורקיז),
+       Create ↔ חכמה/בינה (סגול-לילך), Connect ↔ חסד (תכלת/ורוד-שחר) */
     const STAGES = {
-      be:      { title:"להיות",   sub:"להאט רגע ולהתחבר לגוף", accent:"#3aa1ff",
+      be:      { title:"להיות",   sub:"להאט רגע ולהתחבר לגוף",  accent:"#CCA24A",
+                 gradFrom:"#FFF1C9", gradTo:"#FFD991",
                  actions:["נשימת '4–4' במשך דקה","בדיקת כתפיים/לסת – לשחרר","מילה טובה לעצמי היום"] },
-      play:    { title:"לשחק",    sub:"קצת קלילות ותנועה",      accent:"#ff9800",
+      play:    { title:"לשחק",    sub:"קצת קלילות ותנועה",       accent:"#2FBF71",
+                 gradFrom:"#D9FFE7", gradTo:"#A6F4C5",
                  actions:["3 תנועות גוף קצרות","חיוך קטן לעצמי","משחקון 60 שניות עם מה שיש"] },
-      create:  { title:"ליצור",   sub:"רעיון קטן + צעד ראשון",  accent:"#9b7dff",
-                 actions:["לרשום רעיון אחד","להקדיש 2 דקות לצעד ראשון","לשלוח לחבר/ה לפידבק"] },
-      connect: { title:"להתחבר",  sub:"לב אל לב, הודעה קצרה",   accent:"#ff6f9b",
+      create:  { title:"ליצור",   sub:"רעיון קטן + צעד ראשון",   accent:"#8B6CF6",
+                 gradFrom:"#EBDFFF", gradTo:"#CAB7FF",
+                 actions:["לרשום רעיון אחד","להקדיש 2 דקות לצעד ראשון","לשתף חבר/ה לפידבק"] },
+      connect: { title:"להתחבר",  sub:"לב אל לב, הודעה קצרה",    accent:"#4BA3FF",
+                 gradFrom:"#E7F2FF", gradTo:"#FFD6E6",
                  actions:["לשלוח הודעת לב קצרה למישהו","להציע שיחת 5 דקות","לסגור זמן מפגש השבוע"] }
     };
 
-    const state = { selected:null, reduce: matchMedia?.('(prefers-reduced-motion: reduce)').matches || false };
+    /* ===== פרסונליזציה קלה: seed מהדפדפן/זמן, משפיע בעדינות על גוון וסדר ===== */
+    function getSeed(){
+      try{
+        let s = localStorage.getItem('hw_seed');
+        if(!s){
+          s = String((Date.now() ^ (navigator.hardwareConcurrency||4) ^ (screen.width*screen.height))>>>0);
+          localStorage.setItem('hw_seed', s);
+        }
+        return parseInt(s.slice(-6),10) || 1;
+      }catch{ return 1; }
+    }
+    const SEED = getSeed();
 
-    function vibrate(ms=12){ if(!state.reduce && navigator.vibrate) navigator.vibrate(ms); }
+    function hexToRGBA(hex, a){
+      const m = hex.replace('#','');
+      const b = parseInt(m.length===3 ? m.split('').map(c=>c+c).join('') : m, 16);
+      return `rgba(${(b>>16)&255},${(b>>8)&255},${b&255},${a})`;
+    }
+
+    function vary(hex, amt=0.04){
+      // וריאציה קלה על בסיס seed
+      const m = hex.replace('#','');
+      let r=(parseInt(m.substr(0,2),16)), g=(parseInt(m.substr(2,2),16)), b=(parseInt(m.substr(4,2),16));
+      const delta = (((SEED%7)-3)*amt);
+      r = Math.max(0, Math.min(255, Math.round(r*(1+delta))));
+      g = Math.max(0, Math.min(255, Math.round(g*(1+delta))));
+      b = Math.max(0, Math.min(255, Math.round(b*(1+delta))));
+      return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    }
+
+    /* טוסט קצר + רטט */
+    const prefersReduce = matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
+    function vibrate(ms=12){ if(!prefersReduce && navigator.vibrate) navigator.vibrate(ms); }
+    function showToast(text, ms=1400){
+      const t = document.createElement('div'); t.className='toast'; t.textContent=text;
+      document.body.appendChild(t); setTimeout(()=>t.remove(), ms);
+    }
     function setAccent(hex){ document.documentElement.style.setProperty('--accent', hex); }
 
     function renderStages(){
       const grid = document.getElementById('grid');
-      grid.innerHTML = "";
-      Object.entries(STAGES).forEach(([key, val])=>{
+      const hint = document.getElementById('selection-hint');
+      grid.innerHTML = ""; hint.textContent = "";
+
+      // סדר מותאם־Seed (סיבוב מערך קל)
+      const keys = Object.keys(STAGES);
+      const rot = SEED % keys.length;
+      const ordered = keys.slice(rot).concat(keys.slice(0,rot));
+
+      ordered.forEach((key)=>{
+        const val = STAGES[key];
+        const from = vary(val.gradFrom); const to = vary(val.gradTo);
         const btn = document.createElement('button');
         btn.className = 'stage-btn';
         btn.setAttribute('data-key', key);
+        // גרדיאנט מותאם לשלב + פרסונליזציה עדינה
+        btn.style.setProperty('--stage-grad', `linear-gradient(180deg, ${from}, ${to})`);
         btn.innerHTML = `<div class="title">${val.title}</div><div class="sub">${val.sub}</div>`;
         btn.onclick = ()=>{
           vibrate(14);
@@ -197,15 +253,27 @@
           state.selected = key;
           setAccent(val.accent);
           document.getElementById('go').disabled = false;
+
+          const stageMsg = {
+            be: "בחירה רגועה. נתחיל מלנשום ולהרגיש את הגוף.",
+            play: "איזו קלילות! רגע של משחק משחרר את הראש.",
+            create: "נהדר! רעיון קטן ועוד צעד — ואת/ה בתנועה.",
+            connect: "לב אל לב. הודעה קצרה למישהו — משנה את היום."
+          }[key] || "";
+
+          hint.textContent = `בחרת: ${val.title} — ${stageMsg}`;
+          showToast(`נבחר: ${val.title}`);
         };
         grid.appendChild(btn);
       });
     }
 
+    /* מסכי השראה/סיום */
+    const state = { selected:null };
+
     function renderStar(){
       const key = state.selected; if(!key) return;
       const st = STAGES[key];
-
       const starScreen = document.getElementById('star-screen');
       starScreen.hidden = false;
       document.getElementById('stage-screen').hidden = true;
@@ -238,7 +306,7 @@
 
       end.innerHTML = `
         <div class="door-wrap">
-          <div class="door" style="--door-grad:linear-gradient(180deg, ${st.accent}, #ffffff66)">
+          <div class="door" style="--door-grad:linear-gradient(180deg, ${st.accent}, ${hexToRGBA(st.accent, .2)})">
             <div class="panel left"></div><div class="panel right"></div>
             <div class="idea-star" aria-hidden="true"></div>
             <div class="end-msg">
@@ -257,13 +325,10 @@
       document.getElementById('again').onclick = ()=>{ vibrate(); location.reload(); };
     }
 
+    /* אתחול */
     document.addEventListener('DOMContentLoaded', ()=>{
-      // שנה בפוטר
       const y=document.getElementById('year'); if(y) y.textContent=String(new Date().getFullYear());
-
       renderStages();
-
-      // כפתור "מתגשם" במסך הבחירה
       document.getElementById('go').onclick = ()=>{ if(state.selected){ vibrate(); renderStar(); } };
     });
   </script>
