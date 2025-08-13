@@ -200,4 +200,77 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
+  <script>
+const questions = [
+  {
+    text: "מה הלב שלך מבקש עכשיו?",
+    options: ["חיבוק רגשי", "השראה ויצירה", "שקט ורוגע", "חיבור לאנשים דומים לי"]
+  },
+  {
+    text: "איזה תחום בחיים היית רוצה לראות פורח יותר?",
+    options: ["זוגיות ואהבה", "עיסוק שמכניס שמחה וגם פרנסה", "בריאות גוף ונפש", "תרומה והשפעה בעולם"]
+  },
+  {
+    text: "איך תרצה/י להרגיש בסוף המסע?",
+    options: ["מלא/ה באנרגיה", "רגוע/ה ושליו/ה", "מוארת ומחוברת", "מלא/ת משמעות"]
+  },
+  {
+    text: "איזו חוויה מושכת אותך יותר עכשיו?",
+    options: ["משחק מאתגר שמתאים בדיוק למי שאני", "מסע צבעים ואותיות קבליות", "סיפור חסידי מעורר השראה", "מפגש לבבות עם אנשים מכל העולם"]
+  },
+  {
+    text: "אם היה אפשר לפתוח עכשיו 'שער קסם' לחיים שלך – לאן היית רוצה שהוא יוביל?",
+    options: ["לגלות את המתנה האישית שלי", "לחיות בהרמוניה עם הגוף והנפש", "לחוות אהבה עמוקה", "להגשים חלום ישן"]
+  }
+];
+
+let step = 0;
+
+function renderQuestion() {
+  const qEl = document.querySelector('.question');
+  const optEl = document.querySelector('.options');
+  const ctaEl = document.querySelector('.cta');
+
+  // אם נגמרו השאלות – מסך סיום
+  if (step >= questions.length) {
+    qEl.textContent = "✨ השער שלך נפתח ✨";
+    optEl.innerHTML = "<p style='text-align:center;'>המסע האישי שלך ב-HeartWays ממתין לך</p>";
+    ctaEl.style.display = "none";
+    optEl.style.animation = "fadeIn 1.5s ease-in-out";
+    return;
+  }
+
+  qEl.textContent = questions[step].text;
+  optEl.innerHTML = "";
+
+  questions[step].options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = "btn";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      ctaEl.removeAttribute('disabled');
+    };
+    optEl.appendChild(btn);
+  });
+
+  ctaEl.setAttribute('disabled', '');
+  ctaEl.style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const ctaEl = document.querySelector('.cta');
+  ctaEl.addEventListener('click', () => {
+    step++;
+    renderQuestion();
+  });
+  renderQuestion();
+});
+</script>
+
+<style>
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+</style>
 </html>
