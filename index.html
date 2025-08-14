@@ -1,40 +1,114 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#eaf2ff" />
-<title>HeartWays — פתיחה מותאמת</title>
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eaf2ff">
+<title>HeartWays — דמו</title>
 <style>
-:root{
-  --bg-from:#eaf2ff; --bg-to:#f9fbff;
-  --text:#173b6f; --text-soft:#2b5a92; --accent:#2e6bff;
-  --glass:rgba(255,255,255,.68); --shadow:0 10px 30px rgba(46,107,255,.18);
-  --blob1:#7cc8ff; --blob2:#ffd4e3; --blob3:#d7c6ff;
-}
-*{box-sizing:border-box} html,body{height:100%}
-body{
-  margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans";
-  background:linear-gradient(180deg,var(--bg-from),var(--bg-to));
-  color:var(--text); display:flex; align-items:center; justify-content:center; padding:18px; overflow-x:hidden;
-}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-/* רקע נוזלי + אותיות בתנועה */
-.blobs{ position:fixed; inset:-20vmax -10vmax auto auto; width:120vmax; height:120vmax; z-index:0; pointer-events:none; filter: blur(40px); }
-.blob{ position:absolute; border-radius:40%; opacity:.35; mix-blend-mode:multiply; transform:translateZ(0); animation:floaty 16s ease-in-out infinite; }
-.blob.b1{ background:var(--blob1); width:36vmax;height:36vmax; left:10%;top:0; animation-duration:18s }
-.blob.b2{ background:var(--blob2); width:28vmax;height:28vmax; right:10%;top:20%; animation-duration:20s }
-.blob.b3{ background:var(--blob3); width:32vmax;height:32vmax; left:35%;top:35%; animation-duration:22s }
-@keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(8deg)}}
-
-.letters{
-  position:fixed; inset:0; z-index:0; pointer-events:none; display:grid; place-items:center;
-  font-size:18vmin; font-weight:900; letter-spacing:.7vmin; opacity:.065; color:#0f2233; text-align:center; line-height:1.1;
-  text-shadow:0 1px 0 rgba(255,255,255,.12), 0 8px 16px rgba(15,34,51,.28), 0 18px 30px rgba(15,34,51,.18);
-  filter: blur(.25px); animation: drift 28s linear infinite;
-}
+:root{--bg1:#eaf2ff;--bg2:#f9fbff;--t1:#173b6f;--t2:#2b5a92;--glass:rgba(255,255,255,.68);--sh:0 10px 30px rgba(46,107,255,.18)}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--t1);display:flex;align-items:center;justify-content:center;padding:18px;overflow-x:hidden}
+.blobs{position:fixed;inset:-20vmax -10vmax auto auto;width:120vmax;height:120vmax;z-index:0;pointer-events:none;filter:blur(40px)}
+.blob{position:absolute;border-radius:40%;opacity:.35;mix-blend-mode:multiply;animation:float 18s ease-in-out infinite}
+.blob.b1{left:10%;top:0;width:36vmax;height:36vmax;background:#7cc8ff}
+.blob.b2{right:10%;top:20%;width:28vmax;height:28vmax;background:#ffd4e3;animation-duration:20s}
+.blob.b3{left:35%;top:35%;width:32vmax;height:32vmax;background:#d7c6ff;animation-duration:22s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.letters{position:fixed;inset:0;z-index:0;pointer-events:none;display:grid;place-items:center;font-size:18vmin;font-weight:900;letter-spacing:.7vmin;opacity:.065;color:#0f2233;line-height:1.1;text-shadow:0 1px 0 rgba(255,255,255,.12),0 8px 16px rgba(15,34,51,.28),0 18px 30px rgba(15,34,51,.18);animation:drift 28s linear infinite}
 @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+.wrap{position:relative;z-index:1;width:min(94vw,920px)}
+.card{background:var(--glass);backdrop-filter:blur(14px) saturate(140%);border-radius:22px;padding:18px;box-shadow:var(--sh)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.titlebox{text-align:center;flex:1}h1{margin:0;font-size:1.55rem}.sub{margin:0;color:var(--t2);font-weight:700}
+.status{display:flex;gap:.45rem;justify-content:center;color:#1c3f74;font-weight:800;margin:8px 0 2px}
+.chip{display:inline-flex;gap:.35rem;padding:.35rem .65rem;border-radius:999px;background:linear-gradient(180deg,#eef4ff,#e3ecff);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.album-btn{display:inline-flex;gap:.4rem;padding:.4rem .8rem;border:none;border-radius:999px;background:linear-gradient(180deg,#f1f6ff,#e5eeff);color:#173c70;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.1)}
+.grid{--size:clamp(112px,21vw,170px);display:grid;gap:16px;margin:10px auto 8px;width:fit-content;grid-template-columns:repeat(3,var(--size));grid-template-rows:repeat(3,var(--size));grid-template-areas:". a ." "b . c" ". d ."}
+.node{width:var(--size);height:var(--size)}.a{grid-area:a}.b{grid-area:b}.c{grid-area:c}.d{grid-area:d}
+@media(max-width:560px){.grid{--size:clamp(108px,34vw,150px);gap:12px}}
+.choice{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border:none;border-radius:999px;cursor:pointer;text-align:center;padding:12px;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.78),rgba(255,255,255,.52) 70%),var(--grad,rgba(46,107,255,.06));backdrop-filter:blur(12px) saturate(140%);box-shadow:0 8px 22px rgba(0,0,0,.1);transition:transform .12s,box-shadow .2s,filter .2s}
+.choice:hover{filter:saturate(1.12)}.choice:active{transform:scale(.98)}.choice .t{font-weight:900;font-size:1.02rem}.choice .s{font-size:.88rem;color:#3b5f9a;margin-top:6px}
+.choice.selected{transform:scale(1.04);box-shadow:0 14px 32px rgba(0,0,0,.16),0 0 0 6px rgba(207,230,255,.55)}
+.choice.selected::after{content:"";position:absolute;top:6px;inset-inline-end:8px;width:18px;height:18px;background:radial-gradient(circle,#fff 0 50%,transparent 60%),linear-gradient(180deg,#fff7de,#ffe2a4);clip-path:polygon(50% 0%,65% 20%,80% 20%,65% 35%,100% 50%,65% 65%,80% 80%,65% 80%,50% 100%,35% 80%,20% 80%,35% 65%,0% 50%,35% 35%,20% 20%,35% 20%);filter:drop-shadow(0 2px 4px rgba(0,0,0,.18));opacity:0;animation:pop .25s forwards}@keyframes pop{to{opacity:1}}
+.flow{text-align:center;display:grid;gap:2px}.flow .l1{font-weight:900;font-size:1.18rem}.flow .l2{font-weight:800;color:#204b82}.flow .l3{font-weight:700;color:#2b5c96}
+.parch{margin:0 auto;width:min(92%,680px);background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.7));border-radius:18px;padding:14px;box-shadow:0 12px 28px rgba(0,0,0,.12);backdrop-filter:blur(10px) saturate(140%)}
+.step-illus{width:70px;height:70px;margin:2px auto 8px;opacity:.85;background:radial-gradient(ellipse at 60% 40%,rgba(0,0,0,.12),transparent 60%),radial-gradient(ellipse at 45% 70%,rgba(0,0,0,.12),transparent 60%);border-radius:30% 50% 40% 50% / 50% 40% 60% 50%;transform:rotate(-18deg)}
+.star{width:200px;height:200px;margin:8px auto;background:var(--star-grad,linear-gradient(180deg,#fffaf0,#ffe7b8));clip-path:polygon(50% 0%,65% 20%,80% 20%,65% 35%,100% 50%,65% 65%,80% 80%,65% 80%,50% 100%,35% 80%,20% 80%,35% 65%,0% 50%,35% 35%,20% 20%,35% 20%);box-shadow:0 14px 30px rgba(0,0,0,.16);animation:starIn .45s both, float 6s ease-in-out infinite}
+@keyframes starIn{from{transform:translateY(10px) scale(.94);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.steps{list-style:none;padding:0;margin:4px 0 0;text-align:center;line-height:1.7;color:#234c86;font-size:1.02rem;font-weight:700}
+.cta{display:block;width:100%;padding:12px 16px;margin-top:10px;background:linear-gradient(180deg,#e6f0ff,#d6e8ff);border:none;border-radius:999px;font-size:1rem;font-weight:900;color:var(--t1);cursor:pointer;box-shadow:var(--sh)}
+.album3d{margin:8px auto;width:min(95%,760px);perspective:1000px}.book{position:relative;margin:0 auto;width:640px;max-width:90vw;height:260px;transform-style:preserve-3d;transform:rotateX(6deg) rotateY(-8deg)}
+.cover,.pages,.back{position:absolute;inset:0;border-radius:14px}.cover{background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(245,248,255,.85));box-shadow:0 30px 60px rgba(0,0,0,.18);transform:translateZ(24px)}.pages{background:repeating-linear-gradient(90deg,#fff 0 4px,#f2f4ff 4px 8px);transform:translateZ(12px)}.back{background:linear-gradient(135deg,rgba(230,238,255,.9),rgba(255,255,255,.9))}
+.sun{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px;background:radial-gradient(circle,#fff7d6 0 40%,#ffd87a 60%,transparent 62%),var(--star-grad-center,linear-gradient(180deg,#fff2bf,#ffd97a));clip-path:polygon(50% 0%,65% 20%,80% 20%,65% 35%,100% 50%,65% 65%,80% 80%,65% 80%,50% 100%,35% 80%,20% 80%,35% 65%,0% 50%,35% 35%,20% 20%,35% 20%);filter:drop-shadow(0 18px 28px rgba(0,0,0,.18));animation:pulse 3.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.06)}}
+.overlay{position:fixed;inset:0;background:rgba(15,34,51,.28);display:none;align-items:center;justify-content:center;z-index:9999}
+.modal{padding:22px;border-radius:22px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px) saturate(140%);box-shadow:var(--sh);width:min(92vw,720px);text-align:center;color:#163a6b}
+.big-star{width:120px;height:120px;margin:0 auto 10px;background:linear-gradient(180deg,#fffaf0,#ffe7b8);clip-path:polygon(50% 0%,65% 20%,80% 20%,65% 35%,100% 50%,65% 65%,80% 80%,65% 80%,50% 100%,35% 80%,20% 80%,35% 65%,0% 50%,35% 35%,20% 20%,35% 20%);animation:float 6s ease-in-out infinite;filter:drop-shadow(0 8px 22px rgba(0,0,0,.16))}
+.pill{display:inline-flex;gap:.5rem;padding:.65rem 1.1rem;border-radius:999px;background:linear-gradient(180deg,#eef4ff,#dfeaff);color:#163a6b;font-weight:900;box-shadow:var(--sh);text-decoration:none}
+.mini-star{width:18px;height:18px;background:linear-gradient(180deg,#fffaf0,#ffe7b8);display:inline-block;clip-path:polygon(50% 0%,65% 20%,80% 20%,65% 35%,100% 50%,65% 65%,80% 80%,65% 80%,50% 100%,35% 80%,20% 80%,35% 65%,0% 50%,35% 35%,20% 20%,35% 20%);filter:drop-shadow(0 2px 6px rgba(0,0,0,.12))}
+</style>
+</head><body>
+  <div class="blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+  <div class="letters">אבגדהוזחט · זרימה · לב פתוח · יחד</div>
+
+  <div class="wrap">
+    <main class="card" role="main" aria-labelledby="title">
+      <div class="topbar">
+        <button class="album-btn" id="openAlbum" title="פתחי אלבום" hidden>📔 אלבום</button>
+        <div class="titlebox">
+          <h1 id="title">איך בא לך להתחיל?</h1>
+          <p class="sub" id="subtitle">בחר/י שלב פתיחה — נקפיץ רעיון קטן שמרגיש נכון עכשיו.</p>
+        </div>
+        <div style="width:84px"></div>
+      </div>
+
+      <div class="status"><span class="chip" id="stepsChip">צעדים: 0</span><span class="chip">נשמר באלבום ✦</span></div>
+
+      <section id="home">
+        <div class="grid" id="grid"><div class="node a"></div><div class="node b"></div><div class="node c"></div><div class="node d"></div></div>
+        <div id="hint" class="flow" style="margin-top:6px"><div class="l1"></div><div class="l2"></div><div class="l3"></div></div>
+        <button class="cta" id="go" disabled>מתגשם</button>
+      </section>
+
+      <section id="star" hidden></section>
+      <section id="end" hidden></section>
+    </main>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true"><div class="modal" id="modalBox">
+    <div class="big-star"></div><h2>HeartWays — בקרוב מאוד ✨</h2>
+    <p>המשחק המלא בדרך. נשחרר הורדה כשנפתח את השער.</p>
+    <a class="pill" href="#" onclick="return false"><span class="mini-star"></span>הורדה מוקדמת / עדכון</a>
+    <button class="cta" id="closeSoon">סגור</button>
+  </div></div>
+
+<script>
+const STAGES={be:{key:'be',title:'להיות',sub:'להאט ולהרגיש את הגוף',accent:'#CCA24A',from:'#FFF1C9',to:'#FFD991',acts:["נשימת '4–4' במשך דקה","שחרור כתפיים/לסת","מילה טובה לעצמי"],line:n=>`בחרת להיות — שקט קטן עושה פלאים. צעד ${n} נשמר באלבום.`},
+              play:{key:'play',title:'לשחק',sub:'קלילות ותנועה',accent:'#2FBF71',from:'#D9FFE7',to:'#A6F4C5',acts:["3 תנועות גוף קצרות","חיוך קטן לעצמי","משחקון 60 שניות"],line:n=>`בחרת לשחק — תנועה קטנה מזיזה הרים. צעד ${n}.`},
+              create:{key:'create',title:'ליצור',sub:'רעיון + צעד ראשון',accent:'#8B6CF6',from:'#EBDFFF',to:'#CAB7FF',acts:["לרשום רעיון אחד","2 דקות צעד ראשון","לשתף חבר/ה לפידבק"],line:n=>`בחרת ליצור — התחלה טובה היא חצי דרך. צעד ${n}.`},
+              connect:{key:'connect',title:'להתחבר',sub:'לב אל לב',accent:'#4BA3FF',from:'#E7F2FF',to:'#FFD6E6',acts:["הודעת לב קצרה","שיחת 5 דקות","לסגור זמן מפגש"],line:n=>`בחרת להתחבר — הודעה קטנה משנה יום. צעד ${n}.`}};
+function vary(h,a=.04){const m=h.slice(1);let r=parseInt(m.substr(0,2),16),g=parseInt(m.substr(2,2),16),b=parseInt(m.substr(4,2),16);const d=((Date.now()%7)-3)*a;const c=x=>Math.max(0,Math.min(255,Math.round(x*(1+d))));return '#'+[c(r),c(g),c(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const Album={key:'hw_album',load(){try{return JSON.parse(localStorage.getItem(this.key)||'[]')}catch{return[]}},save(l){try{localStorage.setItem(this.key,JSON.stringify(l))}catch{}},push(e){const l=this.load();l.push(e);this.save(l);return l},count(){return this.load().length}};
+function rgba(h,a){const m=h.slice(1),v=parseInt(m,16);return`rgba(${(v>>16)&255},${(v>>8)&255},${v&255},${a})`}
+function setAccent(x){document.documentElement.style.setProperty('--accent',x)}
+function updateSteps(){$('#stepsChip').textContent=`צעדים: ${Album.count()}`;if(Album.count()>0)$('#openAlbum').hidden=false}
+function setHeader(t,s){$('#title').textContent=t;$('#subtitle').textContent=s}
+
+function renderHome(){const spots={a:$('.a'),b:$('.b'),c:$('.c'),d:$('.d')},order=['be','play','create','connect'];Object.entries({a:order[0],b:order[1],c:order[2],d:order[3]}).forEach(([pos,key])=>{const st=STAGES[key],from=vary(st.from),to=vary(st.to);const btn=document.createElement('button');btn.className='choice';btn.style.setProperty('--grad',`linear-gradient(180deg,${from},${to})`);btn.innerHTML=`<div class="t">${st.title}</div><div class="s">${st.sub}</div>`;btn.onclick=()=>selectStage(key,btn);spots[pos].innerHTML='';spots[pos].appendChild(btn)})}
+let selected=null;
+function selectStage(key,el){$$('.choice').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');selected=key;const st=STAGES[key];setAccent(st.accent);$('#go').disabled=false;$('#hint').innerHTML=`<div class="l1">בחרת: ${st.title}</div><div class="l2">קלף קצר ייפתח עם רעיון</div><div class="l3">הכל נשמר באלבום ✦</div>`;setHeader('המשך המסע','הדרך שלך נשמרת — אלבום קסום מתעדכן ✦')}
+
+function renderStar(){if(!selected)return;const st=STAGES[selected],n=Album.count()+1;$('#home').hidden=true;const g=`linear-gradient(180deg,${rgba(st.accent,.95)},${rgba(st.accent,.55)})`;$('#star').hidden=false;$('#star').innerHTML=`<div class="parch"><div class="flow" style="margin:4px 0 8px"><div class="l1">קלף ${st.title}</div><div class="l2">${st.line(n)}</div><div class="l3">בחר/י פעולה אחת והתחל/י בקטן</div></div><div class="step-illus"></div><div class="star" style="--star-grad:${g}"></div><ul class="steps">${st.acts.map(a=>`<li>• ${a}</li>`).join('')}</ul><div style="display:grid;gap:10px;grid-template-columns:1fr 1fr;margin-top:8px"><button class="cta" id="do">מתגשם</button><button class="cta" id="back" style="background:linear-gradient(180deg,#f7f9ff,#edf3ff)">בחירה אחרת</button></div></div>`;
+$('#do').onclick=()=>{Album.push({t:Date.now(),key:selected,title:st.title,accent:st.accent,line:st.line(n)});updateSteps();renderEnd()};
+$('#back').onclick=()=>{$('#star').hidden=true;$('#home').hidden=false;setHeader('איך בא לך להתחיל?','בחר/י שלב פתיחה — נקפיץ רעיון קטן שמרגיש נכון עכשיו.')}} 
+
+function renderEnd(){const st=STAGES[selected],g=`linear-gradient(180deg,${rgba(st.accent,.95)},${rgba(st.accent,.55)})`;$('#star').hidden=true;$('#end').hidden=false;$('#end').innerHTML=`<div class="parch" style="--star-grad:${g}"><div class="flow"><div class="l1">יפה! עוד צעד במסע שלך</div><div class="l2">הצעד נשמר באלבום הקסום ✦</div><div class="l3">אפשר להמשיך לבחור — או להציץ באלבום</div></div><div class="album3d"><div class="book"><div class="cover"></div><div class="pages"></div><div class="back"></div><div class="sun" style="--star-grad-center:${g}"></div></div></div><div style="display:grid;gap:10px;grid-template-columns:1fr 1fr;margin-top:6px"><button class="cta" id="again">בחירה נוספת</button><button class="cta" id="peekAlbum" style="background:linear-gradient(180deg,#eef6ff,#e2eeff)">📔 פתחי אלבום</button></div><div class="flow" style="margin-top:8px"><div class="l1">HeartWays — המשחק המלא מגיע בקרוב 🎮</div><div class="l2">רוצה לקבל גישה מוקדמת כשזה קורה?</div><div><a class="pill" href="#" onclick="openSoon();return false"><span class="mini-star"></span>הורדה מוקדמת / עדכון</a></div></div></div>`;
+$('#again').onclick=()=>location.reload();$('#peekAlbum').onclick=openAlbum;setAccent(st.accent);setHeader('המשך המסע','הדרך שלך נשמרת — אלבום קסום מתעדכן ✦')}
+
+function openAlbum(){const ov=$('#overlay'),box=$('#modalBox');ov.style.display='flex';ov.setAttribute('aria-hidden','false');const list=Album.load();box.innerHTML=`<div class="big-star"></div><h2>האלבום הקסום שלך ✦</h2><p>הדרך שנשמרה מתוך הבחירות שלך.</p><div id="cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:8px"></div><button class="cta" id="close">סגור</button>`;const cards=$('#cards');if(!list.length){cards.innerHTML=`<div class="parch"><div class="flow"><div class="l2">עדיין ריק</div><div class="l3">כל בחירה נשמרת כאן</div></div></div>`}else{list.forEach((e,i)=>{const grad=`linear-gradient(180deg,${rgba(e.accent,.95)},${rgba(e.accent,.55)})`;const d=new Date(e.t).toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'});const c=document.createElement('div');c.className='parch';c.innerHTML=`<div style="position:absolute;inset-inline-end:10px;top:10px;width:26px;height:26px;background:${grad};clip-path:polygon(50% 0%,65% 20%,80% 20%,65% 35%,100% 50%,65% 65%,80% 80%,65% 80%,50% 100%,35% 80%,20% 80%,35% 65%,0% 50%,35% 35%,20% 20%,35% 20%)"></div><div class="flow"><div class="l1">${e.title} · צעד ${i+1} · ${d}</div><div class="l2">${e.line}</div></div>`;cards.appendChild(c)})}$('#close').onclick=closeOverlay;ov.addEventListener('click',ev=>{if(ev.target===ov)closeOverlay()},{once:true});document.addEventListener('keydown',function esc(ev){if(ev.key==='Escape'){closeOverlay();document.removeEventListener('keydown',esc)}},{once:true})}
+function openSoon(){const ov=$('#overlay'),box=$('#modalBox');ov.style.display='flex';ov.setAttribute('aria-hidden','false');box.innerHTML=`<div class="big-star"></div><h2>HeartWays — בקרוב מאוד ✨</h2><p>המשחק המלא בדרך. נשחרר הורדה כשנפתח את השער.</p><a class="pill" href="#" onclick="return false"><span class="mini-star"></span>הורדה מוקדמת / עדכון</a><button class="cta" id="close">סגור</button>`;$('#close').onclick=closeOverlay}
+function closeOverlay(){const ov=$('#overlay');ov.style.display='none';ov.setAttribute('aria-hidden','true')}
+
+document.addEventListener('DOMContentLoaded',()=>{renderHome();updateSteps();$('#go').onclick=renderStar;$('#openAlbum').onclick=openAlbum;$('#closeSoon').onclick=closeOverlay});
+</script>
+</body></html>@keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
 
 /* קלף מרכזי */
 .wrap{ position:relative; z-index:1; width:min(94vw,920px) }
